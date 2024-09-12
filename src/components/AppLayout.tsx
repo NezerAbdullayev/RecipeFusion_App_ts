@@ -1,12 +1,12 @@
 // import outlet
-import { Outlet } from 'react-router';
+import { Outlet } from "react-router";
 
-import Container from './Container';
-import Header from "./header/Header"
-import Main from "./Main"
-import Footer from "./footer/Footer"
+import Container from "./Container";
+import Header from "./header/Header";
+import Main from "./Main";
+import Footer from "./footer/Footer";
 
-function AppLayout ()  {
+function AppLayout() {
     return (
         <Container>
             <Header />
@@ -18,6 +18,6 @@ function AppLayout ()  {
             <Footer />
         </Container>
     );
-};
+}
 
 export default AppLayout;

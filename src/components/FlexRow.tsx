@@ -1,10 +1,6 @@
-import React from "react";
+import { CommonProps } from "../types/common";
 
-interface FlexRowProps {
-    children: React.ReactNode;
-    className?: string;
-}
-function FlexRow({ children, className = "" }: FlexRowProps) {
+function FlexRow({ children, className = "" }: CommonProps) {
     return <div className={`flex ${className ? className : ""}`}>{children}</div>;
 }
 

@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './pages/HomePage/HomePage';
+import HomePage from './pages/homePage/HomePage';
 import AppLayout from './components/AppLayout';
 import ErrorPage from './pages/errorPage/ErrorPage';
 

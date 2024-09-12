@@ -1,11 +1,7 @@
-import React from 'react';
+import { CommonProps } from "../types/common";
 
-interface RowProps {
-    children: React.ReactNode;
-    className?: string;
-}
-function Row({ children, className = '' }: RowProps) {
-    return <div className={className ? className : ''}>{children}</div>;
+function Row({ children, className = "" }: CommonProps) {
+    return <div className={className ? className : ""}>{children}</div>;
 }
 
 export default Row;
