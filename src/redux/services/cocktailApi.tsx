@@ -11,13 +11,11 @@ const coctailApi = createApi({
             keepUnusedDataFor: 300,
         }),
 
-        getCoctailCategoryList: builder.query({
+        getCocktailCategoryList: builder.query<{ strCategory: string }, void>({
             query: () => "list.php?c=list",
         }),
-        getCoctailAreaList: builder.query({
-            query: () => "list.php?a=list",
-        }),
-        getCoctailIngredients: builder.query<{ strCategory: string[] }, void>({
+
+        getCocktailIngredients: builder.query<{ strCategory: string[] }, void>({
             query: () => "list.php?i=list",
         }),
     }),
@@ -25,9 +23,8 @@ const coctailApi = createApi({
 
 export const {
     useGetCoctailProductsQuery,
-    useGetCoctailCategoryListQuery,
-    useGetCoctailIngredientsQuery,
-    useGetCoctailAreaListQuery,
+    useGetCocktailCategoryListQuery,
+    useGetCocktailIngredientsQuery,
 } = coctailApi;
 
 export default coctailApi;

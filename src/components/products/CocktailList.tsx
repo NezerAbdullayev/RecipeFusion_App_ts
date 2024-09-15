@@ -1,10 +1,10 @@
 import React from "react";
 import { Alert, Col, Divider, Pagination, Row, Spin } from "antd";
-import Cart from "./Cart";
+import Card from "./Card";
 import { useGetCoctailProductsQuery } from "../../redux/services/cocktailApi";
 import usePagination from "../../hooks/usePagination";
 
-const CoctailList: React.FC = () => {
+const CocktailList: React.FC = () => {
     const { data, error, isLoading } = useGetCoctailProductsQuery();
 
     const {
@@ -29,7 +29,7 @@ const CoctailList: React.FC = () => {
             <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
                 {paginate(data?.drinks || []).map((drink) => (
                     <Col key={drink.idDrink} xs={24} sm={12} md={8} lg={6} xl={6}>
-                        <Cart id={drink.idDrink} name={drink.strDrink} src={drink.strDrinkThumb} />
+                        <Card id={drink.idDrink} name={drink.strDrink} src={drink.strDrinkThumb} />
                     </Col>
                 ))}
             </Row>
@@ -48,4 +48,4 @@ const CoctailList: React.FC = () => {
     );
 };
 
-export default CoctailList;
+export default CocktailList;

@@ -1,11 +1,11 @@
 import React from "react";
 import MealList from "./MealList";
-import CoctailList from "./CoctailList";
+import CocktailList from "./CocktailList";
 
 const ProductsList: React.FC = () => (
     <>
         <MealList />
-        <CoctailList />
+        <CocktailList />
     </>
 );
 
