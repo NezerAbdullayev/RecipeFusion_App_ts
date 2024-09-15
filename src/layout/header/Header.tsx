@@ -6,11 +6,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
-import Search from "./Search";
 import SearchIconWrapper from "./SearchIconWrapper";
 import StyledInputBase from "./StyledInputBase";
-import Row from "../Row";
+import Row from "../../components/Row";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Search from "./Search";
 
 function Header() {
     const navigate = useNavigate();

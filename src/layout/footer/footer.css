@@ -1,0 +1,12 @@
+.background-container {
+    background-image: url("../../assets/image.png");
+    background-size: cover;
+    background-position: center;
+    height: 50vh ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

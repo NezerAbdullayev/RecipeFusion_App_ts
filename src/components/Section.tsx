@@ -1,4 +1,4 @@
-import { CommonProps } from "../types/common";
+import { CommonProps } from "./types/common";
 
 function Section({ children, className = "" }: CommonProps) {
     return (

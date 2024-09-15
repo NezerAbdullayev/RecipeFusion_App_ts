@@ -1,14 +1,15 @@
 // import outlet
 import { Outlet } from "react-router";
 
-import Container from "./Container";
 import Header from "./header/Header";
-import Main from "./Main";
+import Main from "../components/Main";
 import Footer from "./footer/Footer";
+
+import { Layout } from "antd";
 
 function AppLayout() {
     return (
-        <Container>
+        <Layout style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
             <Header />
 
             <Main>
@@ -16,7 +17,7 @@ function AppLayout() {
             </Main>
 
             <Footer />
-        </Container>
+        </Layout>
     );
 }
 

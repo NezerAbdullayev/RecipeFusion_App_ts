@@ -1,49 +1,33 @@
-import React, { useState, useEffect } from "react";
+import Filter from "../../components/filters/Filter";
 import Hero from "../../components/hero/Hero";
+import ProductList from "../../components/Pagination";
+import { useGetCoctailProductsQuery } from "../../redux/services/cocktailApi";
+import { useGetMealCategoryListQuery, useGetProductsQuery } from "../../redux/services/mealApi";
 
-// Meal tipini təyin etmək üçün Types.ts faylından import edin
-interface Meal {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-}
+
+
 
 const HomePage: React.FC = () => {
-    // Meal arrayi və error vəziyyəti üçün useState hook-larını təyin edin
-    const [meals, setMeals] = useState<Meal[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
 
-    // fetchMeals funksiyasını təyin edin
-    const fetchMeals = async () => {
-        try {
-            const response = await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=");
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            setMeals(data.meals || []);
-        } catch (error) {
-            setError("Failed to fetch meals");
-            console.error("Failed to fetch meals:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const {data,error,isloading}=useGetProductsQuery()
+    const {data:coctail}=useGetCoctailProductsQuery()
 
-    // useEffect daxilində fetchMeals funksiyasını çağırın
-    useEffect(() => {
-        fetchMeals();
-    }, []);
 
-    console.log(meals);
+    if(error ||isloading)  console.log("p",isloading)
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
 
+    if(data) console.log(data)
+
+        if(coctail) console.log("2",coctail)
+
+
+    console.log(data)
     return (
         <>
             <Hero />
+            {/* <Products /> */}
+            <ProductList />
+            <Filter />
         </>
     );
 };
