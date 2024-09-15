@@ -20,7 +20,7 @@ function Header() {
     };
 
     return (
-        <Box sx={{ flexGrow: 1, position: "fixed", width: "100%", top: "0" }}>
+        <Box sx={{ flexGrow: 1, position: "fixed", width: "100%", top: "0",zIndex:"99999" }}>
             <AppBar position="static" sx={{ background: "#3e3a3a" }}>
                 <Row className="mx-auto w-[1440px] max-w-[90%]">
                     <Toolbar>

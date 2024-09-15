@@ -6,9 +6,6 @@ import {
     useGetMealIngredientsQuery,
 } from "../../redux/services/mealApi";
 
-const filterData = {
-    area: [],
-};
 
 function Filter() {
     // meal category
@@ -37,7 +34,7 @@ function Filter() {
     if (mealCategoryIsLoading || mealIsLoading || mealIngredientIsLoading) <Spin />;
 
     return (
-        <Flex>
+        <Flex justify="center" gap="10px"  style={{margin:"20px"}}>
             <FilterSelect data={mealCategory} />
             <FilterSelect data={mealArea} />
             <FilterSelect data={mealIngredient} />

@@ -13,7 +13,7 @@ const mealApi = createApi({
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
         //  meal products
-        getProducts: builder.query<MealsResponse, void>({
+        getMealProducts: builder.query<MealsResponse, void>({
             query: () => "search.php?s=",
             keepUnusedDataFor: 300,
         }),
@@ -36,7 +36,7 @@ const mealApi = createApi({
 });
 
 export const {
-    useGetProductsQuery,
+    useGetMealProductsQuery,
     useGetMealCategoryListQuery,
     useGetMealIngredientsQuery,
     useGetMealAreaListQuery,

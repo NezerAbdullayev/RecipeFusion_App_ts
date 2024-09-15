@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CocktailResponse } from "./types/apiTypes";
 
 const coctailApi = createApi({
     reducerPath: "cocktailApi",
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.thecocktaildb.com/api/json/v1/1/" }),
     tagTypes: ["Cocktail"],
     endpoints: (builder) => ({
-        getCoctailProducts: builder.query({
+        getCoctailProducts: builder.query<CocktailResponse, void>({
             query: () => "search.php?s=",
             keepUnusedDataFor: 300,
         }),

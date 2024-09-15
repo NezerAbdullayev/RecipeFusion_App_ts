@@ -36,3 +36,19 @@ export interface MealIngredientsResponse {
 
 // /////////////
 
+export  interface Coctail{
+    idDrink:string,
+    strCategory:string,
+    strInstructions:string
+}
+
+
+export interface Cocktail {
+    idDrink: string;
+    strDrink: string;
+    strDrinkThumb: string;
+}
+
+export interface CocktailResponse {
+    drinks: Cocktail[];
+}
