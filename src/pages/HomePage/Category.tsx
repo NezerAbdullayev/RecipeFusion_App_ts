@@ -15,25 +15,6 @@ const Category: React.FC = () => {
     if (mealIsLoading) return <div>Loading...</div>;
     if (mealError) return <div>Error loading categories</div>;
 
-    // const items: MenuItem[] = [
-    //     {
-    //         key: "mealCategory",
-    //         label: "Category",
-    //         icon: <MenuOutlined />,
-    //         children:
-    //             mealCategory?.categories.map((item) => ({
-    //                 key: item.idCategory.toString(),
-    //                 label: (
-    //                     <Checkbox
-    //                         value={item.idCategory.toString()}
-    //                         checked={selectedKeys.includes(item.idCategory.toString())}
-    //                     >
-    //                         {item.strCategory}
-    //                     </Checkbox>
-    //                 ),
-    //             })) || [],
-    //     },
-    // ];
 
     return (
         <Col>

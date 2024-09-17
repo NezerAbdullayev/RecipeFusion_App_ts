@@ -2,6 +2,7 @@ import { Card as CardEl } from "antd";
 import Meta from "antd/es/card/Meta";
 import { HeartOutlined } from "@ant-design/icons";
 import React, { memo } from "react";
+import { useNavigate } from "react-router";
 
 interface CardProps {
     id: string;
@@ -10,6 +11,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ id, name, src }) => {
+    const navigate = useNavigate();
 
     const handleAddToFavorites=(event: React.MouseEvent<HTMLElement>)=>{
         event.stopPropagation()
@@ -17,7 +19,7 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
     }
 
     const handleOpenDetails=()=>{
-        console.log(` hello ${id} details`)
+        navigate(`/details/${id}`)
     }
 
     return (

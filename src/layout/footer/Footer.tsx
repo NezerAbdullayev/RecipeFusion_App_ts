@@ -3,7 +3,7 @@ import "./footer.css";
 
 function Footer() {
     return (
-        <Row className="background-container">
+        <Row className="background-container relative">
             <Row gutter={16} justify="center" align="middle">
                 <Col span={8}>
                     <Row gutter={16} justify="center" align="middle">

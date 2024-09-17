@@ -13,7 +13,6 @@ const mealApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.themealdb.com/api/json/v1/1/" }),
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
-
         //  meal products
         getMealProducts: builder.query<MealsResponse, void>({
             query: () => "search.php?s=",
@@ -23,12 +22,16 @@ const mealApi = createApi({
             query: () => "filter.php?c",
         }),
 
-        getAllMealCategory: builder.query<MealCategoryResponse,void>({
-            query:()=>"categories.php"
+        getAllMealCategory: builder.query<MealCategoryResponse, void>({
+            query: () => "categories.php",
         }),
 
-        getMealCategorys:builder.query<MealsResponse,{category:string}>({
-            query:({category})=>`filter.php?c=${category}`
+        getDetailsById: builder.query<MealsResponse, { id: string }>({
+            query: ({id}) => `lookup.php?i=${id}`,
+        }),
+
+        getMealCategorys: builder.query<MealsResponse, { category: string }>({
+            query: ({ category }) => `filter.php?c=${category}`,
         }),
 
         // meal category listi
@@ -70,6 +73,7 @@ const mealApi = createApi({
 
 export const {
     useGetMealProductsQuery,
+    useGetDetailsByIdQuery,
     useGetMealCategoryListQuery,
     useGetMealIngredientsQuery,
     useGetMealAreaListQuery,

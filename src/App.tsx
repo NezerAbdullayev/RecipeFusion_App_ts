@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom"
 import AppLayout from "./layout/AppLayout";
 import HomePage from "./pages/homePage/HomePage";
 import ErrorPage from "./pages/errorPage/ErrorPage";
+import DetailsPage from "./pages/detailsPage/DetailsPage";
 
 function App() {
     const router = createBrowserRouter([
@@ -12,8 +13,8 @@ function App() {
             children: [
                 { path: "/", element: <Navigate to="/home" replace /> },
                 { path: "home", element: <HomePage /> },
-                { path: "produts:id", element: <HomePage /> },
-                { path: '*', element: <ErrorPage /> },
+                { path: "details/:id", element: <DetailsPage /> },
+                { path: "*", element: <ErrorPage /> },
             ],
         },
     ]);
