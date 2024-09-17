@@ -85,8 +85,9 @@ function Filter() {
                 <Select
                     mode="multiple" // Bir neçə seçimi aktiv etmək üçün
                     placeholder="Meals Category"
-                    style={{ width: 140 }}
-                    allowClear 
+                    style={{ width: 140, height: 56 }}
+                    allowClear
+                    maxTagCount={1}
                 >
                     {mealCategory?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strCategory} value={meal.strCategory}>

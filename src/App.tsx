@@ -12,6 +12,7 @@ function App() {
             children: [
                 { path: "/", element: <Navigate to="/home" replace /> },
                 { path: "home", element: <HomePage /> },
+                { path: "produts:id", element: <HomePage /> },
                 { path: '*', element: <ErrorPage /> },
             ],
         },

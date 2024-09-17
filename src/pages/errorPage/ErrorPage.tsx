@@ -10,7 +10,7 @@ function ErrorPage() {
                 to="/"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-                Go Back to Alarm
+                Go Back to Home
             </Link>
         </div>
     )

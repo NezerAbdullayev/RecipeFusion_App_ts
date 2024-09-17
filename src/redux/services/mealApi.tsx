@@ -4,6 +4,7 @@ import {
     MealCategoryResponse,
     MealAreaResponse,
     MealIngredientsResponse,
+    MealCategory,
 } from "./types/apiTypes";
 
 // API konfiqurasiya
@@ -22,7 +23,7 @@ const mealApi = createApi({
             query: () => "filter.php?c",
         }),
 
-        getAllMealCategory: builder.query<MealsResponse,void>({
+        getAllMealCategory: builder.query<MealCategoryResponse,void>({
             query:()=>"categories.php"
         }),
 

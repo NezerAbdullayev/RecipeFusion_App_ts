@@ -1,45 +1,49 @@
 import React, { useState } from "react";
-import { MenuOutlined, SettingOutlined } from "@ant-design/icons";
-import { Menu } from "antd";
-import type { GetProp, MenuProps } from "antd";
-
-type MenuItem = GetProp<MenuProps, "items">[number];
-
-const items: MenuItem[] = [
-    {
-        key: "Category",
-        label: "Category",
-        icon: <MenuOutlined />,
-        children: [
-            { key: "3", label: "Option 3" },
-            { key: "4", label: "Option 4" },
-        ],
-    },
-    {
-        key: "sub2",
-        label: "Navigation Three",
-        icon: <SettingOutlined />,
-        children: [
-            { key: "7", label: "Option 7" },
-            { key: "8", label: "Option 8" },
-            { key: "9", label: "Option 9" },
-            { key: "10", label: "Option 10" },
-        ],
-    },
-];
+import { Col } from "antd";
+import { useGetAllMealCategoryQuery } from "../../redux/services/mealApi";
 
 const Category: React.FC = () => {
-    // category
+    // Category
+    const {
+        data: mealCategory,
+        error: mealError,
+        isLoading: mealIsLoading,
+    } = useGetAllMealCategoryQuery();
+
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+    if (mealIsLoading) return <div>Loading...</div>;
+    if (mealError) return <div>Error loading categories</div>;
+
+    // const items: MenuItem[] = [
+    //     {
+    //         key: "mealCategory",
+    //         label: "Category",
+    //         icon: <MenuOutlined />,
+    //         children:
+    //             mealCategory?.categories.map((item) => ({
+    //                 key: item.idCategory.toString(),
+    //                 label: (
+    //                     <Checkbox
+    //                         value={item.idCategory.toString()}
+    //                         checked={selectedKeys.includes(item.idCategory.toString())}
+    //                     >
+    //                         {item.strCategory}
+    //                     </Checkbox>
+    //                 ),
+    //             })) || [],
+    //     },
+    // ];
+
     return (
-        <>
-            <Menu
-                style={{ width: 256, marginTop: 20 }}
-                defaultSelectedKeys={["1"]}
-                defaultOpenKeys={["sub1"]}
-                items={items}
-                mode="inline"
-            />
-        </>
+        <Col>
+            {mealCategory?.categories.map((item) => (
+                <label key={item.strCategory}>
+                    <input type="checkbox" />
+                    {item.strCategory}
+                </label>
+            ))}
+        </Col>
     );
 };
 

@@ -16,11 +16,12 @@ export interface MealsResponse {
 }
 
 export interface MealCategory {
+    idCategory:string
     strCategory: string;
 }
 
 export interface MealCategoryResponse {
-    meals: MealCategory[];
+    categories: MealCategory[];
 }
 
 export interface MealArea {

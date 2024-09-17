@@ -2,16 +2,14 @@ import React from "react";
 import Filter from "../../components/filters/MealFilter";
 import Hero from "../../components/hero/Hero";
 import ProductList from "../../components/products/ProductsList";
-import { Layout, Menu } from "antd";
-import { MenuOutlined, FilterOutlined } from "@ant-design/icons";
-import Category from "./Category";
+import { Layout } from "antd";
+import Sidebar from "./Test"; // `Sidebar` komponentinin düzgün import edildiyindən əmin olun
 
 const { Sider } = Layout;
 
 const HomePage: React.FC = () => {
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            {/* sidebar */}
             <Sider
                 width={250}
                 style={{
@@ -22,10 +20,10 @@ const HomePage: React.FC = () => {
                     left: 0,
                 }}
             >
-                <Category />
+                <Sidebar />
             </Sider>
 
-            {/* main*/}
+        
             <Layout style={{ marginLeft: 250 }}>
                 <Hero />
                 <Filter />
