@@ -7,7 +7,7 @@ import {
 import { Typography } from "antd";
 import { SearchOutlined } from "@mui/icons-material";
 import { useCallback, useState } from "react";
-import { debounce } from "@mui/material";
+import { debounce } from "lodash";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -82,7 +82,12 @@ function Filter() {
             {/* sellect items */}
             <Flex justify="center" gap="10px" style={{ margin: "20px" }}>
                 {/* meals category */}
-                <Select placeholder="Meals Category" style={{ width: 140 }}>
+                <Select
+                    mode="multiple" // Bir neçə seçimi aktiv etmək üçün
+                    placeholder="Meals Category"
+                    style={{ width: 140 }}
+                    allowClear 
+                >
                     {mealCategory?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strCategory} value={meal.strCategory}>
                             {meal.strCategory}
@@ -98,7 +103,6 @@ function Filter() {
                         </Option>
                     )) || <Option disabled>No area available</Option>}
                 </Select>
-
                 {/* meals ingredient */}
                 <Select placeholder="Meals Ingredient" style={{ width: 140 }}>
                     {mealsIngredient?.meals?.slice(0, 20)?.map((meal) => (

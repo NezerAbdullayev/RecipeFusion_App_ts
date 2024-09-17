@@ -8,6 +8,7 @@ export interface Meal {
     strMealThumb: string;
     strTags: string;
     strYoutube: string;
+
 }
 
 export interface MealsResponse {
@@ -36,12 +37,11 @@ export interface MealIngredientsResponse {
 
 // /////////////
 
-export  interface Coctail{
-    idDrink:string,
-    strCategory:string,
-    strInstructions:string
+export interface Coctail {
+    idDrink: string;
+    strCategory: string;
+    strInstructions: string;
 }
-
 
 export interface Cocktail {
     idDrink: string;

@@ -12,10 +12,22 @@ const mealApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.themealdb.com/api/json/v1/1/" }),
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
+
         //  meal products
         getMealProducts: builder.query<MealsResponse, void>({
             query: () => "search.php?s=",
-            keepUnusedDataFor: 300,
+        }),
+
+        getMealFilterData: builder.query<MealsResponse, void>({
+            query: () => "filter.php?c",
+        }),
+
+        getAllMealCategory: builder.query<MealsResponse,void>({
+            query:()=>"categories.php"
+        }),
+
+        getMealCategorys:builder.query<MealsResponse,{category:string}>({
+            query:({category})=>`filter.php?c=${category}`
         }),
 
         // meal category listi
@@ -32,6 +44,26 @@ const mealApi = createApi({
         getMealIngredients: builder.query<MealIngredientsResponse, void>({
             query: () => "list.php?i=list",
         }),
+
+        getMealRandomMeal: builder.query<MealCategoryResponse, void>({
+            query: () => "random.php",
+        }),
+
+        getMealProductByName: builder.query<MealsResponse, { searchItem: string }>({
+            query: ({ searchItem }) => `search.php?s=${searchItem}`,
+        }),
+
+        getMealProdcutByCategory: builder.query<MealsResponse, { searchItem: string }>({
+            query: ({ searchItem }) => `search.php?c=${searchItem}`,
+        }),
+
+        getMealProductByArea: builder.query<MealsResponse, { searchItem: string }>({
+            query: ({ searchItem }) => `filter.php?a=${searchItem}`,
+        }),
+
+        getMealProductByIngredient: builder.query<MealsResponse, { searchItem: string }>({
+            query: ({ searchItem }) => `filter.php?i=${searchItem}`,
+        }),
     }),
 });
 
@@ -40,6 +72,10 @@ export const {
     useGetMealCategoryListQuery,
     useGetMealIngredientsQuery,
     useGetMealAreaListQuery,
+    useGetMealFilterDataQuery,
+    useGetAllMealCategoryQuery,
+    useLazyGetMealCategorysQuery,
+    useLazyGetMealRandomMealQuery,
 } = mealApi;
 
 export default mealApi;

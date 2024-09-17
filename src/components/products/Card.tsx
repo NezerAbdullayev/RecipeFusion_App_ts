@@ -17,7 +17,7 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
     }
 
     const handleOpenDetails=()=>{
-        console.log(`Product ${id} added to favorites`)
+        console.log(` hello ${id} details`)
     }
 
     return (
