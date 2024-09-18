@@ -6,7 +6,7 @@ const MealsCategory: React.FC = () => {
     // category
     const { data: mealCategory, error, isLoading } = useGetAllMealCategoryQuery();
 
-    const [checkedItems, setCheckedItems] = useState([]);
+    const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const toggleOpen = () => {
@@ -14,9 +14,13 @@ const MealsCategory: React.FC = () => {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
+        const { name, checked } = e.target; 
 
-        if (checked) setCheckedItems((checkedItems) =>[...checkedItems]);
+        if (checked) {
+            setCheckedItems((checkedItems) => [...checkedItems, name]);
+        } else {
+            setCheckedItems((checkedItems) => checkedItems.filter((item) => item !== name));
+        }
     };
 
     console.log(checkedItems);

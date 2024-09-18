@@ -1,11 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Col, Row, Spin, Pagination, Divider } from "antd";
-import { useGetMealProductsQuery } from "../../redux/services/mealApi";
+import { useLazyGetMealCategorysQuery } from "../../redux/services/mealApi";
 import Card from "./Card";
 import usePagination from "../../hooks/usePagination";
+import Filter from "../filters/MealFilter";
 
 const MealList: React.FC = () => {
-    const { data, error, isLoading } = useGetMealProductsQuery();
+    const [productsData, setProductData] = useState<any[]>([]);
+    const [allMeals, setAllMeals] = useState<any[]>([]);
+
+    const [getMealByCategory, { data, error, isLoading }] = useLazyGetMealCategorysQuery();
+
+    if (data) console.log(data);
+
+    useEffect(() => {
+        const fetchMealCategories = async () => {
+            if (productsData?.length > 0) {
+                try {
+                    const allMeals = await Promise.all(
+                        productsData.map(async (category) => {
+                            const response = await getMealByCategory({ category }).unwrap();
+                            return response.meals;
+                        }),
+                    );
+                    // Bütün nəticələri birləşdir və state-də saxla
+                    setAllMeals(allMeals.flat());
+                } catch (error) {
+                    console.error("Sorğu zamanı xəta baş verdi:", error);
+                }
+            } else setAllMeals([]);
+        };
+
+        fetchMealCategories();
+    }, [productsData, getMealByCategory]);
+
+    console.log(allMeals);
+
+    const addProducts = (newData: any) => {
+        setProductData(newData);
+    };
 
     const {
         currentPage,
@@ -24,10 +57,12 @@ const MealList: React.FC = () => {
             />
         );
 
-        console.log(data)
+    console.log(productsData);
 
     return (
         <>
+            <Filter addProducts={addProducts} productsData={productsData} />
+
             <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
                 {paginate(data?.meals || []).map((meal) => (
                     <Col key={meal.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
@@ -35,6 +70,7 @@ const MealList: React.FC = () => {
                     </Col>
                 ))}
             </Row>
+
             <Pagination
                 current={currentPage}
                 pageSize={size}

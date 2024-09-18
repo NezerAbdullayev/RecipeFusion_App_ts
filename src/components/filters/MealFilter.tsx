@@ -12,33 +12,34 @@ import { debounce } from "lodash";
 const { Option } = Select;
 const { Title } = Typography;
 
-function Filter() {
-    // meal category
+interface FilterProps {
+    addProducts: (newData: any) => void;
+}
+
+const Filter: React.FC<FilterProps> = ({ addProducts }) => {
+    // API queries
     const {
         data: mealCategory,
         error: mealCategoryError,
         isLoading: mealCategoryIsLoading,
     } = useGetMealCategoryListQuery();
 
-    // meals area
     const {
         data: mealArea,
         error: mealAreaError,
         isLoading: mealIsLoading,
     } = useGetMealAreaListQuery();
 
-    // meals Ingredient
-
     const {
         data: mealsIngredient,
         error: mealIngredientError,
         isLoading: mealIngredientIsLoading,
     } = useGetMealIngredientsQuery();
-    const [searchTerm, setSearchTerm] = useState("");
 
-    const searchMeals = async (term: string) => {
-        console.log("Searching for:", term);
-    };
+
+
+    // Search functionality
+    const [searchTerm, setSearchTerm] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -47,13 +48,16 @@ function Filter() {
         if (value) debouncedSearchMeals(value);
     };
 
+    const searchMeals = async (term: string) => {
+        console.log("Searching for:", term);
+    };
+
     const debouncedSearchMeals = useCallback(
         debounce((term) => searchMeals(term), 600),
         [],
     );
 
-    // cocktail
-
+    // Error or loading handling
     if (mealCategoryError || mealAreaError || mealIngredientError)
         return (
             <Alert message="Error" description="There was an error fetching data." type="error" />
@@ -61,9 +65,24 @@ function Filter() {
 
     if (mealCategoryIsLoading || mealIsLoading || mealIngredientIsLoading) return <Spin />;
 
+    // Handlers for Select component changes
+    const handleCategoryChange = (value: string[]) => {
+        addProducts(value);
+    };
+
+    const handleAreaChange = (value: string[]) => {
+        // setSelectedAreas(value);
+        console.log("Selected Areas:", value);
+    };
+
+    const handleIngredientChange = (value: string[]) => {
+        // setSelectedIngredients(value);
+        console.log("Selected Ingredients:", value);
+    };
+
     return (
         <div>
-            {/* title */}
+            {/* Title and search input */}
             <Row justify="center">
                 <Col>
                     <Title level={3} style={{ textAlign: "center", marginTop: "10px" }}>
@@ -79,15 +98,16 @@ function Filter() {
                 </Col>
             </Row>
 
-            {/* sellect items */}
+            {/* Select filters */}
             <Flex justify="center" gap="10px" style={{ margin: "20px" }}>
-                {/* meals category */}
+                {/* Meals Category Select */}
                 <Select
-                    mode="multiple" // Bir neçə seçimi aktiv etmək üçün
+                    mode="multiple"
                     placeholder="Meals Category"
                     style={{ width: 140, height: 56 }}
                     allowClear
                     maxTagCount={1}
+                    onChange={handleCategoryChange}
                 >
                     {mealCategory?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strCategory} value={meal.strCategory}>
@@ -96,16 +116,27 @@ function Filter() {
                     )) || <Option disabled>No categories available</Option>}
                 </Select>
 
-                {/* meals area */}
-                <Select placeholder="Meals Area" style={{ width: 140 }}>
+                {/* Meals Area Select */}
+                <Select
+                    placeholder="Meals Area"
+                    style={{ width: 140, height: 56 }}
+                    allowClear
+                    onChange={handleAreaChange}
+                >
                     {mealArea?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strArea} value={meal.strArea}>
                             {meal.strArea}
                         </Option>
                     )) || <Option disabled>No area available</Option>}
                 </Select>
-                {/* meals ingredient */}
-                <Select placeholder="Meals Ingredient" style={{ width: 140 }}>
+
+                {/* Meals Ingredient Select */}
+                <Select
+                    placeholder="Meals Ingredient"
+                    style={{ width: 140, height: 56 }}
+                    allowClear
+                    onChange={handleIngredientChange}
+                >
                     {mealsIngredient?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strIngredient} value={meal.strIngredient}>
                             {meal.strIngredient}
@@ -115,6 +146,6 @@ function Filter() {
             </Flex>
         </div>
     );
-}
+};
 
 export default Filter;
