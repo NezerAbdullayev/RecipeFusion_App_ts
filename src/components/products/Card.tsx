@@ -13,9 +13,19 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ id, name, src }) => {
     const navigate = useNavigate();
 
-    const handleAddToFavorites=(event: React.MouseEvent<HTMLElement>)=>{
-        event.stopPropagation()
-        console.log(id)
+    const handleAddToFavorites=()=>{
+        const storedFavorites = localStorage.getItem("favorites");
+        const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+
+        if (!favorites.includes(id)) {
+            favorites.push(id);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            console.log("Added to favorites:", id);
+        } else {
+            console.log("Already in favorites:", id);
+        }
+        console.log(favorites)
+
     }
 
     const handleOpenDetails=()=>{

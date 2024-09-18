@@ -32,7 +32,7 @@ const mealApi = createApi({
 
         // meal catehgorys
         getMealCategorys: builder.query<MealsResponse, { category: string }>({
-            query: ({ category }) => `filter.php?c=${category}`,
+            query: ({ category }) => `filter.php?c=${category}&limit=10`,
         }),
 
         // meal category listi

@@ -6,38 +6,37 @@ import usePagination from "../../hooks/usePagination";
 import Filter from "../filters/MealFilter";
 
 const MealList: React.FC = () => {
-    const [productsData, setProductData] = useState<any[]>([]);
-    const [allMeals, setAllMeals] = useState<any[]>([]);
+    const [mealCategorys, setMealCategorys] = useState<string[]>([]);
+    const [mealDate, setMealDate] = useState<any[]>([]);
 
-    const [getMealByCategory, { data, error, isLoading }] = useLazyGetMealCategorysQuery();
+    const [getMealByCategory, { error, isLoading }] = useLazyGetMealCategorysQuery();
 
-    if (data) console.log(data);
+    console.log(mealCategorys);
 
     useEffect(() => {
         const fetchMealCategories = async () => {
-            if (productsData?.length > 0) {
+            if (mealCategorys?.length > 0) {
                 try {
                     const allMeals = await Promise.all(
-                        productsData.map(async (category) => {
+                        mealCategorys.map(async (category) => {
                             const response = await getMealByCategory({ category }).unwrap();
                             return response.meals;
                         }),
                     );
-                    // Bütün nəticələri birləşdir və state-də saxla
-                    setAllMeals(allMeals.flat());
+                    setMealDate(allMeals.flat());
                 } catch (error) {
-                    console.error("Sorğu zamanı xəta baş verdi:", error);
+                    console.error(error);
                 }
-            } else setAllMeals([]);
+            } else setMealDate([]);
         };
 
         fetchMealCategories();
-    }, [productsData, getMealByCategory]);
+    }, [mealCategorys, getMealByCategory, setMealCategorys]);
 
-    console.log(allMeals);
+    console.log(mealDate);
 
-    const addProducts = (newData: any) => {
-        setProductData(newData);
+    const addMealCategoryList = (newData: string[]) => {
+        setMealCategorys(newData);
     };
 
     const {
@@ -45,7 +44,7 @@ const MealList: React.FC = () => {
         pageSize: size,
         paginate,
         setCurrentPage,
-    } = usePagination(data?.meals?.length || 0, 10);
+    } = usePagination(mealDate?.length || 0, 12);
 
     if (isLoading) return <Spin />;
     if (error)
@@ -57,14 +56,12 @@ const MealList: React.FC = () => {
             />
         );
 
-    console.log(productsData);
-
     return (
         <>
-            <Filter addProducts={addProducts} productsData={productsData} />
+            <Filter addMealCategoryList={addMealCategoryList} mealCategorys={mealCategorys} />
 
             <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
-                {paginate(data?.meals || []).map((meal) => (
+                {paginate(mealDate || []).map((meal) => (
                     <Col key={meal.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
                         <Card id={meal.idMeal} name={meal.strMeal} src={meal.strMealThumb} />
                     </Col>
@@ -75,7 +72,7 @@ const MealList: React.FC = () => {
                 current={currentPage}
                 pageSize={size}
                 align="center"
-                total={data?.meals?.length || 0}
+                total={mealDate?.length || 0}
                 onChange={(page) => setCurrentPage(page)}
                 style={{ textAlign: "center", margin: "20px 0" }}
                 showSizeChanger={false}

@@ -13,10 +13,11 @@ const { Option } = Select;
 const { Title } = Typography;
 
 interface FilterProps {
-    addProducts: (newData: any) => void;
+    addMealCategoryList: (newData: string) => void;
+    mealCategorys:string[]
 }
 
-const Filter: React.FC<FilterProps> = ({ addProducts }) => {
+const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) => {
     // API queries
     const {
         data: mealCategory,
@@ -35,8 +36,6 @@ const Filter: React.FC<FilterProps> = ({ addProducts }) => {
         error: mealIngredientError,
         isLoading: mealIngredientIsLoading,
     } = useGetMealIngredientsQuery();
-
-
 
     // Search functionality
     const [searchTerm, setSearchTerm] = useState("");
@@ -57,17 +56,9 @@ const Filter: React.FC<FilterProps> = ({ addProducts }) => {
         [],
     );
 
-    // Error or loading handling
-    if (mealCategoryError || mealAreaError || mealIngredientError)
-        return (
-            <Alert message="Error" description="There was an error fetching data." type="error" />
-        );
-
-    if (mealCategoryIsLoading || mealIsLoading || mealIngredientIsLoading) return <Spin />;
-
     // Handlers for Select component changes
-    const handleCategoryChange = (value: string[]) => {
-        addProducts(value);
+    const handleCategoryChange = (value: string) => {
+        addMealCategoryList(value);
     };
 
     const handleAreaChange = (value: string[]) => {
@@ -79,6 +70,14 @@ const Filter: React.FC<FilterProps> = ({ addProducts }) => {
         // setSelectedIngredients(value);
         console.log("Selected Ingredients:", value);
     };
+
+    // Error or loading handling
+    if (mealCategoryError || mealAreaError || mealIngredientError)
+        return (
+            <Alert message="Error" description="There was an error fetching data." type="error" />
+        );
+
+    if (mealCategoryIsLoading || mealIsLoading || mealIngredientIsLoading) return <Spin />;
 
     return (
         <div>
