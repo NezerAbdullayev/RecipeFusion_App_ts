@@ -62,7 +62,6 @@ const mealApi = createApi({
         }),
 
         getMealProductByArea: builder.query<MealsResponse, { searchItem: string[] }>({
-            // query: ({ searchItem }) => `filter.php?a=${searchItem}`,
             queryFn: async ({ searchItem }) => {
                 try {
                     const responses = await Promise.all(
@@ -78,8 +77,20 @@ const mealApi = createApi({
             },
         }),
 
-        getMealProductByIngredient: builder.query<MealsResponse, { searchItem: string }>({
-            query: ({ searchItem }) => `filter.php?i=${searchItem}`,
+        getMealProductByIngredient: builder.query<MealsResponse, { searchItem: string[] }>({
+            queryFn: async ({ searchItem }) => {
+                try {
+                    const responses = await Promise.all(
+                        searchItem.map((ingredient) =>
+                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`).then((res) => res.json()),
+                        ),
+                    );
+                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    return { data: { meals }, error: "" };
+                } catch (error) {
+                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                }
+            },
         }),
     }),
 });
@@ -98,6 +109,7 @@ export const {
     useLazyGetMealRandomMealQuery,
 
     useLazyGetMealProductByAreaQuery,
+    useLazyGetMealProductByIngredientQuery
 } = mealApi;
 
 export default mealApi;
