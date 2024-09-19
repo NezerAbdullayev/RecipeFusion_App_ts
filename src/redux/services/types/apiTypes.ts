@@ -8,7 +8,6 @@ export interface Meal {
     strMealThumb: string;
     strTags: string;
     strYoutube: string;
-
 }
 
 export interface MealsResponse {
@@ -16,14 +15,14 @@ export interface MealsResponse {
 }
 
 export interface MealCategory {
-    idCategory:string
+    idMeal: string;
     strCategory: string;
+    strMealThumb: string;
 }
 
 export interface MealCategoryResponse {
-    categories: MealCategory[];
+    meals: MealCategory[];
 }
-
 export interface MealArea {
     strArea: string;
 }

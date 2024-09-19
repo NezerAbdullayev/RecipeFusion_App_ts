@@ -1,42 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Col, Row, Spin, Pagination, Divider } from "antd";
-import { useLazyGetMealCategorysQuery } from "../../redux/services/mealApi";
+import {
+    useGetMealCategorysQuery,
+    useLazyGetMealProductByAreaQuery,
+} from "../../redux/services/mealApi";
 import Card from "./Card";
 import usePagination from "../../hooks/usePagination";
 import Filter from "../filters/MealFilter";
 
 const MealList: React.FC = () => {
-    const [mealCategorys, setMealCategorys] = useState<string[]>([]);
+    const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
+    const [mealAreasFilter, setMealAreasFilter] = useState<string[]>([]);
     const [mealDate, setMealDate] = useState<any[]>([]);
 
-    const [getMealByCategory, { error, isLoading }] = useLazyGetMealCategorysQuery();
+    const {
+        data: categoryData,
+        error,
+        isLoading,
+    } = useGetMealCategorysQuery({ categories: mealCategorys });
 
-    console.log(mealCategorys);
+    const [getMealProductByArea] = useLazyGetMealProductByAreaQuery();
+
+    console.log(mealAreasFilter);
 
     useEffect(() => {
-        const fetchMealCategories = async () => {
-            if (mealCategorys?.length > 0) {
-                try {
-                    const allMeals = await Promise.all(
-                        mealCategorys.map(async (category) => {
-                            const response = await getMealByCategory({ category }).unwrap();
-                            return response.meals;
-                        }),
-                    );
-                    setMealDate(allMeals.flat());
-                } catch (error) {
-                    console.error(error);
-                }
-            } else setMealDate([]);
-        };
+        if (categoryData) {
+            setMealDate(categoryData);
+        }
+    }, [categoryData]);
 
-        fetchMealCategories();
-    }, [mealCategorys, getMealByCategory, setMealCategorys]);
-
-    console.log(mealDate);
-
+    // category
     const addMealCategoryList = (newData: string[]) => {
+        // debugger;
         setMealCategorys(newData);
+    };
+
+    // area
+    const handleMealAreasList = (area: string[]) => {
+        setMealAreasFilter(area);
     };
 
     const {
@@ -47,6 +48,7 @@ const MealList: React.FC = () => {
     } = usePagination(mealDate?.length || 0, 12);
 
     if (isLoading) return <Spin />;
+
     if (error)
         return (
             <Alert
@@ -58,7 +60,12 @@ const MealList: React.FC = () => {
 
     return (
         <>
-            <Filter addMealCategoryList={addMealCategoryList} mealCategorys={mealCategorys} />
+            <Filter
+                addMealCategoryList={addMealCategoryList}
+                mealCategorys={mealCategorys}
+                onMealFilterList={handleMealAreasList}
+                mealAreasFilter={mealAreasFilter}
+            />
 
             <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
                 {paginate(mealDate || []).map((meal) => (

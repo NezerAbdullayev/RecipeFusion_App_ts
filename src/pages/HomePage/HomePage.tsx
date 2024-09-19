@@ -1,14 +1,17 @@
 import React from "react";
 import Hero from "../../components/hero/Hero";
-import ProductList from "../../components/products/ProductsList";
 import { Layout } from "antd";
-
+import MealList from "../../components/products/MealList";
+import CocktailList from "../../components/products/CocktailList";
 
 const HomePage: React.FC = () => {
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Hero />
-            <ProductList />
+            <div className="mt-10">
+                <MealList />
+                <CocktailList />
+            </div>
         </Layout>
     );
 };

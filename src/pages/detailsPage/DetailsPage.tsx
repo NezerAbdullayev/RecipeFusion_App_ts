@@ -6,7 +6,7 @@ import { useGetDetailsByIdQuery } from "../../redux/services/mealApi";
 const { Title, Paragraph } = Typography;
 
 const DetailsPage: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string  }>();
     const { data: product, error, isLoading } = useGetDetailsByIdQuery({ id });
 
     // Məlumatları yüklədiyimizi və ya səhv olduğunu yoxlayırıq

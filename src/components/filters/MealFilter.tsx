@@ -2,40 +2,45 @@ import { Alert, Col, Flex, Input, Row, Select, Spin } from "antd";
 import {
     useGetMealAreaListQuery,
     useGetMealCategoryListQuery,
-    useGetMealIngredientsQuery,
+    useGetMealIngredientsListQuery,
 } from "../../redux/services/mealApi";
 import { Typography } from "antd";
 import { SearchOutlined } from "@mui/icons-material";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { debounce } from "lodash";
 
 const { Option } = Select;
 const { Title } = Typography;
 
 interface FilterProps {
-    addMealCategoryList: (newData: string) => void;
-    mealCategorys:string[]
+    addMealCategoryList: (newData: string[]) => void;
+    mealCategorys: string[];
+    onMealFilterList: (area: string[]) => void;
+    mealAreasFilter: string[];
 }
 
-const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) => {
+const Filter: React.FC<FilterProps> = ({
+    addMealCategoryList,
+    mealCategorys,
+    onMealFilterList,
+    mealAreasFilter,
+}) => {
     // API queries
     const {
         data: mealCategory,
         error: mealCategoryError,
         isLoading: mealCategoryIsLoading,
     } = useGetMealCategoryListQuery();
-
     const {
         data: mealArea,
         error: mealAreaError,
-        isLoading: mealIsLoading,
+        isLoading: mealAreaIsLoading,
     } = useGetMealAreaListQuery();
-
     const {
         data: mealsIngredient,
         error: mealIngredientError,
         isLoading: mealIngredientIsLoading,
-    } = useGetMealIngredientsQuery();
+    } = useGetMealIngredientsListQuery();
 
     // Search functionality
     const [searchTerm, setSearchTerm] = useState("");
@@ -57,13 +62,12 @@ const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) =>
     );
 
     // Handlers for Select component changes
-    const handleCategoryChange = (value: string) => {
+    const handleCategoryChange = (value: string[]) => {
         addMealCategoryList(value);
     };
 
     const handleAreaChange = (value: string[]) => {
-        // setSelectedAreas(value);
-        console.log("Selected Areas:", value);
+        onMealFilterList(value);
     };
 
     const handleIngredientChange = (value: string[]) => {
@@ -77,7 +81,7 @@ const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) =>
             <Alert message="Error" description="There was an error fetching data." type="error" />
         );
 
-    if (mealCategoryIsLoading || mealIsLoading || mealIngredientIsLoading) return <Spin />;
+    if (mealCategoryIsLoading || mealAreaIsLoading || mealIngredientIsLoading) return <Spin />;
 
     return (
         <div>
@@ -106,6 +110,7 @@ const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) =>
                     style={{ width: 140, height: 56 }}
                     allowClear
                     maxTagCount={1}
+                    value={mealCategorys}
                     onChange={handleCategoryChange}
                 >
                     {mealCategory?.meals?.slice(0, 20)?.map((meal) => (
@@ -117,9 +122,11 @@ const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) =>
 
                 {/* Meals Area Select */}
                 <Select
+                    mode="multiple"
                     placeholder="Meals Area"
                     style={{ width: 140, height: 56 }}
                     allowClear
+                    value={mealAreasFilter}
                     onChange={handleAreaChange}
                 >
                     {mealArea?.meals?.slice(0, 20)?.map((meal) => (
@@ -147,4 +154,4 @@ const Filter: React.FC<FilterProps> = ({ addMealCategoryList,mealCategorys }) =>
     );
 };
 
-export default Filter;
+export default memo(Filter);

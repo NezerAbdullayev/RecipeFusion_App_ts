@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import {
     MealsResponse,
     MealCategoryResponse,
@@ -18,23 +18,6 @@ const mealApi = createApi({
             query: () => "search.php?s=",
         }),
 
-        getMealFilterData: builder.query<MealsResponse, void>({
-            query: () => "filter.php?c",
-        }),
-
-        getAllMealCategory: builder.query<MealCategoryResponse, void>({
-            query: () => "categories.php",
-        }),
-
-        getDetailsById: builder.query<MealsResponse, { id: string }>({
-            query: ({id}) => `lookup.php?i=${id}`,
-        }),
-
-        // meal catehgorys
-        getMealCategorys: builder.query<MealsResponse, { category: string }>({
-            query: ({ category }) => `filter.php?c=${category}&limit=10`,
-        }),
-
         // meal category listi
         getMealCategoryList: builder.query<MealCategoryResponse, void>({
             query: () => "list.php?c=list",
@@ -46,8 +29,36 @@ const mealApi = createApi({
         }),
 
         // meal ingredients listi
-        getMealIngredients: builder.query<MealIngredientsResponse, void>({
+        getMealIngredientsList: builder.query<MealIngredientsResponse, void>({
             query: () => "list.php?i=list",
+        }),
+        //////
+
+        getAllMealCategory: builder.query<MealCategoryResponse, void>({
+            query: () => "categories.php",
+        }),
+
+        // meal catehgorys
+        getMealCategorys: builder.query<MealsResponse, { categories: string[] | [] }>({
+            queryFn: async ({ categories }) => {
+                try {
+                    const responses = await Promise.all(
+                        categories?.map((category) =>
+                            fetch(
+                                `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`,
+                            ).then((res) => res.json()),
+                        ),
+                    );
+                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    return { data: meals };
+                } catch (error) {
+                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                }
+            },
+        }),
+
+        getDetailsById: builder.query<MealsResponse, { id: string }>({
+            query: ({ id }) => `lookup.php?i=${id}`,
         }),
 
         getMealRandomMeal: builder.query<MealCategoryResponse, void>({
@@ -58,9 +69,7 @@ const mealApi = createApi({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
 
-        getMealProdcutByCategory: builder.query<MealsResponse, { searchItem: string }>({
-            query: ({ searchItem }) => `search.php?c=${searchItem}`,
-        }),
+
 
         getMealProductByArea: builder.query<MealsResponse, { searchItem: string }>({
             query: ({ searchItem }) => `filter.php?a=${searchItem}`,
@@ -74,14 +83,19 @@ const mealApi = createApi({
 
 export const {
     useGetMealProductsQuery,
-    useGetDetailsByIdQuery,
+
     useGetMealCategoryListQuery,
-    useGetMealIngredientsQuery,
     useGetMealAreaListQuery,
-    useGetMealFilterDataQuery,
+    useGetMealIngredientsListQuery,
+
     useGetAllMealCategoryQuery,
-    useLazyGetMealCategorysQuery,
+    useGetMealCategorysQuery,
+
+    useGetDetailsByIdQuery,
     useLazyGetMealRandomMealQuery,
+
+    useLazyGetMealProductByAreaQuery
+
 } = mealApi;
 
 export default mealApi;
