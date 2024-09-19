@@ -7,10 +7,6 @@ const mealApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.themealdb.com/api/json/v1/1/" }),
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
-        //  meal products
-        getMealProducts: builder.query<MealsResponse, void>({
-            query: () => "search.php?s=",
-        }),
 
         // meal category listi
         getMealCategoryList: builder.query<MealCategoryResponse, void>({
@@ -96,8 +92,7 @@ const mealApi = createApi({
 });
 
 export const {
-    useGetMealProductsQuery,
-
+    
     useGetMealCategoryListQuery,
     useGetMealAreaListQuery,
     useGetMealIngredientsListQuery,

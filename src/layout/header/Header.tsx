@@ -19,8 +19,12 @@ function Header() {
         navigate("/home");
     };
 
+    const handleFavorites = () => {
+        navigate("/favorites");
+    };
+
     return (
-        <Box sx={{ flexGrow: 1, position: "fixed", width: "100%", top: "0",zIndex:"99999" }}>
+        <Box sx={{ flexGrow: 1, position: "fixed", width: "100%", top: "0", zIndex: "99999" }}>
             <AppBar position="static" sx={{ background: "#3e3a3a" }}>
                 <Row className="mx-auto w-[1440px] max-w-[90%]">
                     <Toolbar>
@@ -42,12 +46,9 @@ function Header() {
                                 <SearchIconWrapper>
                                     <SearchIcon />
                                 </SearchIconWrapper>
-                                <StyledInputBase
-                                    placeholder="Search…"
-                                    inputProps={{ "aria-label": "search" }}
-                                />
+                                <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
                             </Search>
-                            <Button color="inherit" sx={{ ml: 2 }}>
+                            <Button color="inherit" sx={{ ml: 2 }} onClick={handleFavorites}>
                                 <FavoriteIcon />
                             </Button>
                         </Box>
