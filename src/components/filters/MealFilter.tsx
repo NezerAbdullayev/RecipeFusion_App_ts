@@ -1,9 +1,5 @@
 import { Alert, Col, Flex, Input, Row, Select, Spin } from "antd";
-import {
-    useGetMealAreaListQuery,
-    useGetMealCategoryListQuery,
-    useGetMealIngredientsListQuery,
-} from "../../redux/services/mealApi";
+import { useGetMealAreaListQuery, useGetMealCategoryListQuery, useGetMealIngredientsListQuery } from "../../redux/services/mealApi";
 import { Typography } from "antd";
 import { SearchOutlined } from "@mui/icons-material";
 import { memo, useCallback, useState } from "react";
@@ -19,28 +15,11 @@ interface FilterProps {
     mealAreasFilter: string[];
 }
 
-const Filter: React.FC<FilterProps> = ({
-    addMealCategoryList,
-    mealCategorys,
-    onMealFilterList,
-    mealAreasFilter,
-}) => {
+const Filter: React.FC<FilterProps> = ({ addMealCategoryList, mealCategorys, onMealFilterList, mealAreasFilter }) => {
     // API queries
-    const {
-        data: mealCategory,
-        error: mealCategoryError,
-        isLoading: mealCategoryIsLoading,
-    } = useGetMealCategoryListQuery();
-    const {
-        data: mealArea,
-        error: mealAreaError,
-        isLoading: mealAreaIsLoading,
-    } = useGetMealAreaListQuery();
-    const {
-        data: mealsIngredient,
-        error: mealIngredientError,
-        isLoading: mealIngredientIsLoading,
-    } = useGetMealIngredientsListQuery();
+    const { data: mealCategory, error: mealCategoryError, isLoading: mealCategoryIsLoading } = useGetMealCategoryListQuery();
+    const { data: mealArea, error: mealAreaError, isLoading: mealAreaIsLoading } = useGetMealAreaListQuery();
+    const { data: mealsIngredient, error: mealIngredientError, isLoading: mealIngredientIsLoading } = useGetMealIngredientsListQuery();
 
     // Search functionality
     const [searchTerm, setSearchTerm] = useState("");
@@ -77,9 +56,7 @@ const Filter: React.FC<FilterProps> = ({
 
     // Error or loading handling
     if (mealCategoryError || mealAreaError || mealIngredientError)
-        return (
-            <Alert message="Error" description="There was an error fetching data." type="error" />
-        );
+        return <Alert message="Error" description="There was an error fetching data." type="error" />;
 
     if (mealCategoryIsLoading || mealAreaIsLoading || mealIngredientIsLoading) return <Spin />;
 
@@ -91,13 +68,7 @@ const Filter: React.FC<FilterProps> = ({
                     <Title level={3} style={{ textAlign: "center", marginTop: "10px" }}>
                         Meal Products
                     </Title>
-                    <Input
-                        placeholder="Product search"
-                        prefix={<SearchOutlined />}
-                        value={searchTerm}
-                        allowClear
-                        onChange={handleChange}
-                    />
+                    <Input placeholder="Product search" prefix={<SearchOutlined />} value={searchTerm} allowClear onChange={handleChange} />
                 </Col>
             </Row>
 
@@ -124,6 +95,7 @@ const Filter: React.FC<FilterProps> = ({
                 <Select
                     mode="multiple"
                     placeholder="Meals Area"
+                    maxTagCount={1}
                     style={{ width: 140, height: 56 }}
                     allowClear
                     value={mealAreasFilter}
@@ -137,12 +109,7 @@ const Filter: React.FC<FilterProps> = ({
                 </Select>
 
                 {/* Meals Ingredient Select */}
-                <Select
-                    placeholder="Meals Ingredient"
-                    style={{ width: 140, height: 56 }}
-                    allowClear
-                    onChange={handleIngredientChange}
-                >
+                <Select placeholder="Meals Ingredient" style={{ width: 140, height: 56 }} allowClear onChange={handleIngredientChange}>
                     {mealsIngredient?.meals?.slice(0, 20)?.map((meal) => (
                         <Option key={meal.strIngredient} value={meal.strIngredient}>
                             {meal.strIngredient}

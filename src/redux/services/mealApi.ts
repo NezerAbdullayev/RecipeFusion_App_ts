@@ -1,11 +1,5 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import {
-    MealsResponse,
-    MealCategoryResponse,
-    MealAreaResponse,
-    MealIngredientsResponse,
-    MealCategory,
-} from "./types/apiTypes";
+import { MealsResponse, MealCategoryResponse, MealAreaResponse, MealIngredientsResponse, MealCategory } from "./types/apiTypes";
 
 // API konfiqurasiya
 const mealApi = createApi({
@@ -44,9 +38,7 @@ const mealApi = createApi({
                 try {
                     const responses = await Promise.all(
                         categories?.map((category) =>
-                            fetch(
-                                `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`,
-                            ).then((res) => res.json()),
+                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`).then((res) => res.json()),
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals).reverse();
@@ -69,10 +61,21 @@ const mealApi = createApi({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
 
-
-
-        getMealProductByArea: builder.query<MealsResponse, { searchItem: string }>({
-            query: ({ searchItem }) => `filter.php?a=${searchItem}`,
+        getMealProductByArea: builder.query<MealsResponse, { searchItem: string[] }>({
+            // query: ({ searchItem }) => `filter.php?a=${searchItem}`,
+            queryFn: async ({ searchItem }) => {
+                try {
+                    const responses = await Promise.all(
+                        searchItem.map((area) =>
+                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`).then((res) => res.json()),
+                        ),
+                    );
+                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    return { data: { meals }, error: "" };
+                } catch (error) {
+                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                }
+            },
         }),
 
         getMealProductByIngredient: builder.query<MealsResponse, { searchItem: string }>({
@@ -94,8 +97,7 @@ export const {
     useGetDetailsByIdQuery,
     useLazyGetMealRandomMealQuery,
 
-    useLazyGetMealProductByAreaQuery
-
+    useLazyGetMealProductByAreaQuery,
 } = mealApi;
 
 export default mealApi;

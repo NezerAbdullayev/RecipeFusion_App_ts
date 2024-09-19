@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Col, Row, Spin, Pagination, Divider } from "antd";
-import {
-    useGetMealCategorysQuery,
-    useLazyGetMealProductByAreaQuery,
-} from "../../redux/services/mealApi";
+import { useGetMealCategorysQuery, useLazyGetMealProductByAreaQuery } from "../../redux/services/mealApi";
 import Card from "./Card";
 import usePagination from "../../hooks/usePagination";
 import Filter from "../filters/MealFilter";
@@ -13,21 +10,42 @@ const MealList: React.FC = () => {
     const [mealAreasFilter, setMealAreasFilter] = useState<string[]>([]);
     const [mealDate, setMealDate] = useState<any[]>([]);
 
-    const {
-        data: categoryData,
-        error,
-        isLoading,
-    } = useGetMealCategorysQuery({ categories: mealCategorys });
+    const { data: categoryData, error, isLoading } = useGetMealCategorysQuery({ categories: mealCategorys });
 
-    const [getMealProductByArea] = useLazyGetMealProductByAreaQuery();
+    const [getMealProductByArea, { data: fetchedAreaMealData, error: areaError }] = useLazyGetMealProductByAreaQuery();
 
-    console.log(mealAreasFilter);
+
+    console.log("re-render")
+
 
     useEffect(() => {
         if (categoryData) {
             setMealDate(categoryData);
         }
     }, [categoryData]);
+
+    useEffect(() => {
+        if (mealAreasFilter.length > 0) getMealProductByArea({ searchItem: mealAreasFilter });
+    }, [mealAreasFilter, getMealProductByArea]);
+
+
+    useEffect(() => {
+        if (fetchedAreaMealData && mealAreasFilter.length>0) {
+
+            const categoryMealIds = new Set(categoryData.map(categoryProduct => categoryProduct.idMeal));
+            const updatedMeals = fetchedAreaMealData.meals.filter((item) =>
+                categoryMealIds.has(item.idMeal)
+            );
+           setMealDate(updatedMeals)
+        }
+        else{
+            setMealDate(categoryData)
+        }
+    }, [fetchedAreaMealData,mealAreasFilter]);
+
+
+    // pagination hooks
+    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(mealDate?.length || 0, 12);
 
     // category
     const addMealCategoryList = (newData: string[]) => {
@@ -40,23 +58,9 @@ const MealList: React.FC = () => {
         setMealAreasFilter(area);
     };
 
-    const {
-        currentPage,
-        pageSize: size,
-        paginate,
-        setCurrentPage,
-    } = usePagination(mealDate?.length || 0, 12);
-
     if (isLoading) return <Spin />;
 
-    if (error)
-        return (
-            <Alert
-                message="Error"
-                description="An error occurred while fetching the meals."
-                type="error"
-            />
-        );
+    if (error || areaError) return <Alert message="Error" description="An error occurred while fetching the meals." type="error" />;
 
     return (
         <>
