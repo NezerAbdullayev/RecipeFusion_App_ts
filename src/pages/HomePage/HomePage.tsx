@@ -17,11 +17,12 @@ const HomePage: React.FC = () => {
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Hero />
+
+            {/* products */}
             <div className="mt-10">
                 {/* global search */}
                 <Search onSearchData={handleSearchData} />
 
-                {/* products */}
                 {SearchData.length > 0 ? (
                     <Pagination data={SearchData} />
                 ) : (

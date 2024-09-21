@@ -15,7 +15,11 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
 
     const [getMealProductByName, { data: mealData, isLoading: mealLoading }] = useLazyGetMealProductByNameQuery();
 
-    const [getCocktailProductByName, { data: cocktailData, isLoading: cocktailLoading }] = useLazyGetCocktailProductByNameQuery();
+    const [getCocktailProductByName, { data: cocktailData, isLoading: coctailsLoading }] = useLazyGetCocktailProductByNameQuery();
+
+    console.log(cocktailData?.drinks && cocktailData?.drinks?.length > 0);
+
+    const isProductAvailable = (cocktailData?.drinks && cocktailData.drinks.length > 0) || (mealData?.meals && mealData.meals.length > 0);
 
     useEffect(() => {
         const meals: MealProduct[] = mealData?.meals ?? [];
@@ -58,10 +62,10 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
                 value={searchTerm}
                 allowClear
                 onChange={handleSearchInputChange}
-                style={{ width: 300, margin: "30px 0" }}
+                style={{ width: "90%", height: 50, margin: "30px auto" }}
             />
 
-            {searchTerm?.length > 0 && !mealData?.meals?.length && !mealLoading && (
+            {searchTerm?.length > 0 && !isProductAvailable && !mealLoading && !coctailsLoading && (
                 <div className="rounded bg-red-100 p-2 text-red-500">The product you are looking for is not available</div>
             )}
         </Row>
