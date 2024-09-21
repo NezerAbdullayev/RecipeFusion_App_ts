@@ -9,12 +9,21 @@ import Card from "./Card";
 import usePagination from "../../hooks/usePagination";
 import Filter from "../sellected/MealSellect";
 
+interface Meals{
+    idMeal:string;
+    strMeal:string;
+    strMealThumb:string,
+}
+
+
 const MealList: React.FC = () => {
     const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
     const [mealAreasFilter, setMealAreasFilter] = useState<string[]>([]);
     const [mealIngredientFilter, setMealIngredientFilter] = useState<string[]>([]);
 
-    const [mealDate, setMealDate] = useState<any[]>([]);
+    const [mealData, setMealData] = useState<Meals[]>([]);
+
+    // console.log(mealData,"2")
 
     const { data: categoryData, error, isLoading } = useGetMealCategorysQuery({ categories: mealCategorys });
 
@@ -23,12 +32,11 @@ const MealList: React.FC = () => {
     const [getMealProductByIngredient, { data: fetchedIngredientMealData, error: IngredientError }] =
         useLazyGetMealProductByIngredientQuery();
 
-
-        console.log("re-render")
+    // console.log("re-render");
 
     // get category effect
     useEffect(() => {
-        setMealDate(categoryData);
+        setMealData(categoryData);
     }, [categoryData]);
 
     // get area effect
@@ -43,15 +51,14 @@ const MealList: React.FC = () => {
 
     // local filtered data
     useEffect(() => {
-        // If categoryData is not available or both fetchedAreaMealData and fetchedIngredientMealData are not available,
-        // simply set mealDate to categoryData
+
         if (!categoryData || (!fetchedAreaMealData && !fetchedIngredientMealData)) {
-            setMealDate(categoryData || []);
+            setMealData(categoryData || []);
             return;
         }
 
         // Create a set of meal IDs from the category data for quick lookup
-        const categoryMealIds = new Set(categoryData.map((product) => product.idMeal));
+        const categoryMealIds = new Set(categoryData.map((product: any) => product.idMeal));
 
         if (fetchedAreaMealData && mealAreasFilter?.length > 0 && fetchedIngredientMealData && mealIngredientFilter?.length > 0) {
             const ingredientMealIds = new Set(fetchedIngredientMealData?.meals?.map((item) => item.idMeal));
@@ -60,22 +67,22 @@ const MealList: React.FC = () => {
 
             const filteredMeals = fetchedAreaMealData?.meals?.filter((item) => commonMealIds.includes(item.idMeal));
 
-            setMealDate(filteredMeals);
+            setMealData(filteredMeals);
         } else if (fetchedAreaMealData && mealAreasFilter?.length > 0) {
             const updatedMeals = fetchedAreaMealData?.meals?.filter((item) => categoryMealIds.has(item.idMeal));
 
-            setMealDate(updatedMeals);
+            setMealData(updatedMeals);
         } else if (fetchedIngredientMealData && mealIngredientFilter?.length > 0) {
             const updatedMeals = fetchedIngredientMealData?.meals?.filter((item) => categoryMealIds.has(item.idMeal));
 
-            setMealDate(updatedMeals);
+            setMealData(updatedMeals);
         } else {
-            setMealDate(categoryData);
+            setMealData(categoryData);
         }
     }, [fetchedAreaMealData, fetchedIngredientMealData, categoryData, mealAreasFilter, mealIngredientFilter]);
 
     // pagination hooks
-    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(mealDate?.length || 0, 12);
+    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(mealData?.length || 0, 12);
 
     // category
     const addMealCategoryList = (newData: string[]) => {
@@ -111,7 +118,7 @@ const MealList: React.FC = () => {
             />
 
             <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
-                {paginate(mealDate || []).map((meal) => (
+                {paginate(mealData || []).map((meal) => (
                     <Col key={meal.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
                         <Card id={meal.idMeal} name={meal.strMeal} src={meal.strMealThumb} />
                     </Col>
@@ -122,7 +129,7 @@ const MealList: React.FC = () => {
                 current={currentPage}
                 pageSize={size}
                 align="center"
-                total={mealDate?.length || 0}
+                total={mealData?.length || 0}
                 onChange={(page) => setCurrentPage(page)}
                 style={{ textAlign: "center", margin: "20px 0" }}
                 showSizeChanger={false}

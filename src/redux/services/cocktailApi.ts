@@ -6,9 +6,15 @@ const coctailApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.thecocktaildb.com/api/json/v1/1/" }),
     tagTypes: ["Cocktail"],
     endpoints: (builder) => ({
+        // cocktail category list
+        getCoctailList: builder.query({
+            query: () => "list.php?c=list",
+        }),
+
+        // coctails category list
         getCoctailProducts: builder.query<CocktailResponse, void>({
             query: () => "search.php?s=",
-            keepUnusedDataFor: 300,
+            keepUnusedDataFor: 60,
         }),
 
         getCocktailCategoryList: builder.query<{ strCategory: string }, void>({
@@ -21,10 +27,7 @@ const coctailApi = createApi({
     }),
 });
 
-export const {
-    useGetCoctailProductsQuery,
-    useGetCocktailCategoryListQuery,
-    useGetCocktailIngredientsQuery,
-} = coctailApi;
+export const { useGetCoctailListQuery, useGetCoctailProductsQuery, useGetCocktailCategoryListQuery, useGetCocktailIngredientsQuery } =
+    coctailApi;
 
 export default coctailApi;

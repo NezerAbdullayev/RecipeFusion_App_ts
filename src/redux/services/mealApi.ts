@@ -38,7 +38,7 @@ const mealApi = createApi({
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals).reverse();
-                    return { data: meals };
+                    return { data: meals, };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
                 }

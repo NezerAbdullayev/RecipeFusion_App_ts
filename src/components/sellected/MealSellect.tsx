@@ -33,7 +33,7 @@ const MealSellect: React.FC<FilterProps> = ({
     // Search functionality
     const [searchTerm, setSearchTerm] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setSearchTerm(value);
 
@@ -76,7 +76,13 @@ const MealSellect: React.FC<FilterProps> = ({
                     <Title level={3} style={{ textAlign: "center", marginTop: "10px" }}>
                         Meal Products
                     </Title>
-                    <Input placeholder="Product search" prefix={<SearchOutlined />} value={searchTerm} allowClear onChange={handleChange} />
+                    <Input
+                        placeholder="Product search"
+                        prefix={<SearchOutlined />}
+                        value={searchTerm}
+                        allowClear
+                        onChange={handleSearchInputChange}
+                    />
                 </Col>
             </Row>
 

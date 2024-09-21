@@ -1,7 +1,7 @@
 import { Card as CardEl } from "antd";
 import Meta from "antd/es/card/Meta";
 import { HeartOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { useNavigate } from "react-router";
 
 interface CardProps {
@@ -40,7 +40,6 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
     const handleOpenDetails = () => {
         navigate(`/details/${id}`);
     };
-
 
     return (
         <CardEl

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Alert, Col, Divider, Pagination, Row, Spin } from "antd";
 import Card from "./Card";
 import { useGetCoctailProductsQuery } from "../../redux/services/cocktailApi";
 import usePagination from "../../hooks/usePagination";
 
 const CocktailList: React.FC = () => {
+    // const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
     const { data, error, isLoading } = useGetCoctailProductsQuery();
 
     const {
