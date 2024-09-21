@@ -1,9 +1,7 @@
-import { Alert, Col, Flex, Input, Row, Select, Spin } from "antd";
+import { Alert, Col, Flex,  Row, Select, Spin } from "antd";
 import { useGetMealAreaListQuery, useGetMealCategoryListQuery, useGetMealIngredientsListQuery } from "../../redux/services/mealApi";
 import { Typography } from "antd";
-import { SearchOutlined } from "@mui/icons-material";
-import { memo, useCallback, useState } from "react";
-import { debounce } from "lodash";
+import { memo, useCallback } from "react";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -30,37 +28,27 @@ const MealSellect: React.FC<FilterProps> = ({
     const { data: mealArea, error: mealAreaError, isLoading: mealAreaIsLoading } = useGetMealAreaListQuery();
     const { data: mealsIngredient, error: mealIngredientError, isLoading: mealIngredientIsLoading } = useGetMealIngredientsListQuery();
 
-    // Search functionality
-    const [searchTerm, setSearchTerm] = useState("");
-
-    const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setSearchTerm(value);
-
-        if (value) debouncedSearchMeals(value);
-    };
-
-    const searchMeals = async (term: string) => {
-        console.log("Searching for:", term);
-    };
-
-    const debouncedSearchMeals = useCallback(
-        debounce((term) => searchMeals(term), 600),
-        [],
+    // Handlers for Select component changes
+    const handleCategoryChange = useCallback(
+        (value: string[]) => {
+            addMealCategoryList(value);
+        },
+        [addMealCategoryList],
     );
 
-    // Handlers for Select component changes
-    const handleCategoryChange = (value: string[]) => {
-        addMealCategoryList(value);
-    };
+    const handleAreaChange = useCallback(
+        (value: string[]) => {
+            onMealFilterList(value);
+        },
+        [onMealFilterList],
+    );
 
-    const handleAreaChange = (value: string[]) => {
-        onMealFilterList(value);
-    };
-
-    const handleIngredientChange = (value: string[]) => {
-        onMealIngredientList(value);
-    };
+    const handleIngredientChange = useCallback(
+        (value: string[]) => {
+            onMealIngredientList(value);
+        },
+        [onMealIngredientList],
+    );
 
     // Error or loading handling
     if (mealCategoryError || mealAreaError || mealIngredientError)
@@ -76,13 +64,6 @@ const MealSellect: React.FC<FilterProps> = ({
                     <Title level={3} style={{ textAlign: "center", marginTop: "10px" }}>
                         Meal Products
                     </Title>
-                    <Input
-                        placeholder="Product search"
-                        prefix={<SearchOutlined />}
-                        value={searchTerm}
-                        allowClear
-                        onChange={handleSearchInputChange}
-                    />
                 </Col>
             </Row>
 

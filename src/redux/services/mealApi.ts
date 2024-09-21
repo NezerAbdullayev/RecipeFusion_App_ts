@@ -7,29 +7,21 @@ const mealApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.themealdb.com/api/json/v1/1/" }),
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
-
-        // meal category listi
+        //  get meals filters list
         getMealCategoryList: builder.query<MealCategoryResponse, void>({
             query: () => "list.php?c=list",
         }),
 
-        // meal region listi
         getMealAreaList: builder.query<MealAreaResponse, void>({
             query: () => "list.php?a=list",
         }),
 
-        // meal ingredients listi
         getMealIngredientsList: builder.query<MealIngredientsResponse, void>({
             query: () => "list.php?i=list",
         }),
-        //////
 
-        getAllMealCategory: builder.query<MealCategoryResponse, void>({
-            query: () => "categories.php",
-        }),
-
-        // meal catehgorys
-        getMealCategorys: builder.query<MealsResponse, { categories: string[] | [] }>({
+        // get meal products
+        getMealProductByCategory: builder.query<MealsResponse, { categories: string[] }>({
             queryFn: async ({ categories }) => {
                 try {
                     const responses = await Promise.all(
@@ -38,23 +30,11 @@ const mealApi = createApi({
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals).reverse();
-                    return { data: meals, };
+                    return { data: meals };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
                 }
             },
-        }),
-
-        getDetailsById: builder.query<MealsResponse, { id: string }>({
-            query: ({ id }) => `lookup.php?i=${id}`,
-        }),
-
-        getMealRandomMeal: builder.query<MealCategoryResponse, void>({
-            query: () => "random.php",
-        }),
-
-        getMealProductByName: builder.query<MealsResponse, { searchItem: string }>({
-            query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
 
         getMealProductByArea: builder.query<MealsResponse, { searchItem: string[] }>({
@@ -88,23 +68,32 @@ const mealApi = createApi({
                 }
             },
         }),
+
+        getDetailsById: builder.query<MealsResponse, { id: string }>({
+            query: ({ id }) => `lookup.php?i=${id}`,
+        }),
+
+        getMealRandomMeal: builder.query<MealCategoryResponse, void>({
+            query: () => "random.php",
+        }),
+
+        getMealProductByName: builder.query<MealsResponse, { searchItem: string }>({
+            query: ({ searchItem }) => `search.php?s=${searchItem}`,
+        }),
     }),
 });
 
 export const {
-    
     useGetMealCategoryListQuery,
     useGetMealAreaListQuery,
     useGetMealIngredientsListQuery,
 
-    useGetAllMealCategoryQuery,
-    useGetMealCategorysQuery,
+    useGetMealProductByCategoryQuery,
+    useLazyGetMealProductByAreaQuery,
+    useLazyGetMealProductByIngredientQuery,
 
     useGetDetailsByIdQuery,
     useLazyGetMealRandomMealQuery,
-
-    useLazyGetMealProductByAreaQuery,
-    useLazyGetMealProductByIngredientQuery
 } = mealApi;
 
 export default mealApi;

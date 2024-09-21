@@ -1,29 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert, Col, Divider, Pagination, Row, Spin } from "antd";
 import Card from "./Card";
 import { useGetCoctailProductsQuery } from "../../redux/services/cocktailApi";
 import usePagination from "../../hooks/usePagination";
 
 const CocktailList: React.FC = () => {
-    // const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
     const { data, error, isLoading } = useGetCoctailProductsQuery();
 
-    const {
-        currentPage,
-        pageSize: size,
-        paginate,
-        setCurrentPage,
-    } = usePagination(data?.drinks?.length || 0, 10);
+    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(data?.drinks?.length || 0, 10);
 
     if (isLoading) return <Spin />;
-    if (error)
-        return (
-            <Alert
-                message="Error"
-                description="An error occurred while fetching the coctails."
-                type="error"
-            />
-        );
+    if (error) return <Alert message="Error" description="An error occurred while fetching the coctails." type="error" />;
 
     return (
         <>

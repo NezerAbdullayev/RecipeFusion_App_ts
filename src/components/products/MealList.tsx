@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Col, Row, Spin, Pagination, Divider } from "antd";
+import { Alert, Spin } from "antd";
 import {
-    useGetMealCategorysQuery,
+    useGetMealProductByCategoryQuery,
     useLazyGetMealProductByAreaQuery,
     useLazyGetMealProductByIngredientQuery,
 } from "../../redux/services/mealApi";
-import Card from "./Card";
-import usePagination from "../../hooks/usePagination";
 import Filter from "../sellected/MealSellect";
+import Pagination from "../pagination/Pagination";
 
-interface Meals{
-    idMeal:string;
-    strMeal:string;
-    strMealThumb:string,
+export interface Meals {
+    idMeal: string;
+    strMeal: string;
+    strMealThumb: string;
 }
-
 
 const MealList: React.FC = () => {
     const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
@@ -23,16 +21,14 @@ const MealList: React.FC = () => {
 
     const [mealData, setMealData] = useState<Meals[]>([]);
 
-    // console.log(mealData,"2")
+    console.log("azerbaycan");
 
-    const { data: categoryData, error, isLoading } = useGetMealCategorysQuery({ categories: mealCategorys });
+    const { data: categoryData, error, isLoading } = useGetMealProductByCategoryQuery({ categories: mealCategorys });
 
     const [getMealProductByArea, { data: fetchedAreaMealData, error: areaError }] = useLazyGetMealProductByAreaQuery();
 
     const [getMealProductByIngredient, { data: fetchedIngredientMealData, error: IngredientError }] =
         useLazyGetMealProductByIngredientQuery();
-
-    // console.log("re-render");
 
     // get category effect
     useEffect(() => {
@@ -42,7 +38,7 @@ const MealList: React.FC = () => {
     // get area effect
     useEffect(() => {
         if (mealAreasFilter.length > 0) getMealProductByArea({ searchItem: mealAreasFilter });
-    }, [mealAreasFilter, getMealProductByArea]);
+    }, [mealAreasFilter]);
 
     // get ingredient effect
     useEffect(() => {
@@ -51,7 +47,6 @@ const MealList: React.FC = () => {
 
     // local filtered data
     useEffect(() => {
-
         if (!categoryData || (!fetchedAreaMealData && !fetchedIngredientMealData)) {
             setMealData(categoryData || []);
             return;
@@ -80,9 +75,6 @@ const MealList: React.FC = () => {
             setMealData(categoryData);
         }
     }, [fetchedAreaMealData, fetchedIngredientMealData, categoryData, mealAreasFilter, mealIngredientFilter]);
-
-    // pagination hooks
-    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(mealData?.length || 0, 12);
 
     // category
     const addMealCategoryList = (newData: string[]) => {
@@ -117,25 +109,7 @@ const MealList: React.FC = () => {
                 mealIngredientFilter={mealIngredientFilter}
             />
 
-            <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
-                {paginate(mealData || []).map((meal) => (
-                    <Col key={meal.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
-                        <Card id={meal.idMeal} name={meal.strMeal} src={meal.strMealThumb} />
-                    </Col>
-                ))}
-            </Row>
-
-            <Pagination
-                current={currentPage}
-                pageSize={size}
-                align="center"
-                total={mealData?.length || 0}
-                onChange={(page) => setCurrentPage(page)}
-                style={{ textAlign: "center", margin: "20px 0" }}
-                showSizeChanger={false}
-            />
-
-            <Divider />
+            <Pagination data={mealData} type="meals" />
         </>
     );
 };
