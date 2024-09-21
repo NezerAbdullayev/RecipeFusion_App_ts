@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { MealsResponse, MealCategoryResponse, MealAreaResponse, MealIngredientsResponse, MealCategory } from "./types/apiTypes";
+import { MealsResponse, MealCategoryResponse, MealAreaResponse, MealIngredientsResponse } from "./types/apiTypes";
+import {  MealProductsProps } from "../../types/mealTypes";
 
 // API konfiqurasiya
 const mealApi = createApi({
@@ -29,7 +30,7 @@ const mealApi = createApi({
                             fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`).then((res) => res.json()),
                         ),
                     );
-                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    const meals = responses.flatMap((response) => response.meals)?.reverse();
                     return { data: meals };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
@@ -45,7 +46,7 @@ const mealApi = createApi({
                             fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`).then((res) => res.json()),
                         ),
                     );
-                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    const meals = responses.flatMap((response) => response.meals)?.reverse();
                     return { data: { meals }, error: "" };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
@@ -61,7 +62,7 @@ const mealApi = createApi({
                             fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`).then((res) => res.json()),
                         ),
                     );
-                    const meals = responses.flatMap((response) => response.meals).reverse();
+                    const meals = responses.flatMap((response) => response.meals)?.reverse();
                     return { data: { meals }, error: "" };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
@@ -77,7 +78,7 @@ const mealApi = createApi({
             query: () => "random.php",
         }),
 
-        getMealProductByName: builder.query<MealsResponse, { searchItem: string }>({
+        getMealProductByName: builder.query<MealProductsProps, { searchItem: string }>({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
     }),
@@ -94,6 +95,7 @@ export const {
 
     useGetDetailsByIdQuery,
     useLazyGetMealRandomMealQuery,
+    useLazyGetMealProductByNameQuery,
 } = mealApi;
 
 export default mealApi;

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { CocktailResponse } from "./types/apiTypes";
+import { CocktailProductsProps } from "../../types/mealTypes";
 
 const coctailApi = createApi({
     reducerPath: "cocktailApi",
@@ -24,10 +25,20 @@ const coctailApi = createApi({
         getCocktailIngredients: builder.query<{ strCategory: string[] }, void>({
             query: () => "list.php?i=list",
         }),
+
+        getCocktailProductByName: builder.query<CocktailProductsProps, { searchItem: string }>({
+            query: ({ searchItem }) => `search.php?s=${searchItem}`,
+        }),
     }),
 });
 
-export const { useGetCoctailListQuery, useGetCoctailProductsQuery, useGetCocktailCategoryListQuery, useGetCocktailIngredientsQuery } =
-    coctailApi;
+export const {
+    useGetCoctailListQuery,
+    useGetCoctailProductsQuery,
+    useGetCocktailCategoryListQuery,
+    useGetCocktailIngredientsQuery,
+
+    useLazyGetCocktailProductByNameQuery,
+} = coctailApi;
 
 export default coctailApi;

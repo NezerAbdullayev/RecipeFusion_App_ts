@@ -4,31 +4,32 @@ import { Layout } from "antd";
 import MealList from "../../components/products/MealList";
 import CocktailList from "../../components/products/CocktailList";
 import Search from "../../components/search/Search";
+import { CocktailProduct, MealProduct } from "../../types/mealTypes";
+import Pagination from "../../components/pagination/Pagination";
 
 const HomePage: React.FC = () => {
-    const [SearchData, setSearchData] = useState<any>("");
+    const [SearchData, setSearchData] = useState<(MealProduct | CocktailProduct)[]>([]);
 
-    const handleSearchChange = (term: string) => {
-        setSearchData(term);
+    const handleSearchData = (searchProduct: (MealProduct | CocktailProduct)[]) => {
+        setSearchData(searchProduct);
     };
-
-    useEffect(() => {
-       
-        if (setSearchData?.length > 0) {
-            console.log("search et",SearchData);
-        }
-    }, [SearchData]);
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Hero />
             <div className="mt-10">
                 {/* global search */}
-                <Search onSearchChange={handleSearchChange} />
+                <Search onSearchData={handleSearchData} />
 
                 {/* products */}
-                <MealList />
-                <CocktailList />
+                {SearchData.length > 0 ? (
+                    <Pagination data={SearchData} />
+                ) : (
+                    <>
+                        <MealList />
+                        <CocktailList />
+                    </>
+                )}
             </div>
         </Layout>
     );

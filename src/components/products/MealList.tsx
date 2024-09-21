@@ -109,7 +109,7 @@ const MealList: React.FC = () => {
                 mealIngredientFilter={mealIngredientFilter}
             />
 
-            <Pagination data={mealData} type="meals" />
+            <Pagination data={mealData} />
         </>
     );
 };

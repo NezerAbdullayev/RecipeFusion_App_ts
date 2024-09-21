@@ -10,11 +10,6 @@ interface CardProps {
     src: string;
 }
 
-interface FavoriteItem {
-    id: number;
-    name: string;
-    src: string;
-}
 
 const Card: React.FC<CardProps> = ({ id, name, src }) => {
     const navigate = useNavigate();
@@ -23,7 +18,7 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
         const storedFavorites = localStorage.getItem("favorites");
         const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
 
-        const isFavorite = favorites.some((item: FavoriteItem) => item?.id?.toString() === id?.toString());
+        const isFavorite = favorites.some((item: CardProps) => item?.id?.toString() === id?.toString());
 
         if (!isFavorite) {
             // Add new favorite item
