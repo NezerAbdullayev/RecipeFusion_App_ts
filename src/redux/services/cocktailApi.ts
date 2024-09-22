@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { CocktailResponse } from "./types/apiTypes";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
     CocktailAlcoholicResponse,
     CocktailCategoryResponse,

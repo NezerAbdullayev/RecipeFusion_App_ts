@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Alert, Input, Row } from "antd";
-import { debounce, divide } from "lodash";
+import {  Input, Row } from "antd";
+import { debounce } from "lodash";
 import { useLazyGetMealProductByNameQuery } from "../../redux/services/mealApi";
 import { CocktailProduct, MealProduct } from "../../types/globalTypes";
 import { useLazyGetCocktailProductByNameQuery } from "../../redux/services/cocktailApi";
@@ -11,7 +11,6 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearchData }) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [prevSearch, setPrevSearch] = useState<string[]>([]);
 
     const [getMealProductByName, { data: mealData, isLoading: mealLoading }] = useLazyGetMealProductByNameQuery();
 
@@ -35,8 +34,6 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
             if (term?.length > 0) {
                 getMealProductByName({ searchItem: term });
                 getCocktailProductByName({ searchItem: term });
-
-                setPrevSearch((prevSearch) => [...prevSearch, term].slice(-3));
             } else onSearchData([]);
         }, 600),
         [],
