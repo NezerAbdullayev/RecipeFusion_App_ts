@@ -40,7 +40,7 @@ const CocktailList: React.FC = () => {
     }, [cocktailIngredientList]);
 
     useEffect(() => {
-        if (coctailAlcoholicList?.length > 0) GetCocktailProductByAlcoholic({ sellectedItems: coctailAlcoholicList });
+        if (coctailAlcoholicList?.length > 0) GetCocktailProductByAlcoholic({ selectedItems: coctailAlcoholicList });
     }, [coctailAlcoholicList]);
 
     // local filtered data

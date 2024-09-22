@@ -92,7 +92,7 @@ const CocktailSellect: React.FC<FilterProps> = ({
                 <Select
                     mode="multiple"
                     placeholder="Cocktail Category"
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     maxTagCount={1}
                     value={cocktalCategoryList}
@@ -105,12 +105,12 @@ const CocktailSellect: React.FC<FilterProps> = ({
                     )) || <Option disabled>No categories available</Option>}
                 </Select>
 
-                {/* Cocktail Area Select */}
+                {/* Cocktail Alcoholic Select */}
                 <Select
                     mode="multiple"
-                    placeholder="Cocktail Area"
+                    placeholder="Cocktail Alcoholic"
                     maxTagCount={1}
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     value={coctailAlcoholicList}
                     onChange={handleAlcoholicChange}
@@ -127,7 +127,7 @@ const CocktailSellect: React.FC<FilterProps> = ({
                     mode="multiple"
                     placeholder="Cocktail Ingredient"
                     maxTagCount={1}
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     value={cocktailIngredientList}
                     onChange={handleIngredientChange}

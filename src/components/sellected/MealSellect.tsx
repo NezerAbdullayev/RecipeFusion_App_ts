@@ -73,7 +73,7 @@ const MealSellect: React.FC<FilterProps> = ({
                 <Select
                     mode="multiple"
                     placeholder="Meals Category"
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     maxTagCount={1}
                     value={mealCategorys}
@@ -91,7 +91,7 @@ const MealSellect: React.FC<FilterProps> = ({
                     mode="multiple"
                     placeholder="Meals Area"
                     maxTagCount={1}
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     value={mealAreasFilter}
                     onChange={handleAreaChange}
@@ -108,7 +108,7 @@ const MealSellect: React.FC<FilterProps> = ({
                     mode="multiple"
                     placeholder="Meals Ingredient"
                     maxTagCount={1}
-                    style={{ width: 140, height: 56 }}
+                    style={{ width: 200, height: 56 }}
                     allowClear
                     value={mealIngredientFilter}
                     onChange={handleIngredientChange}
