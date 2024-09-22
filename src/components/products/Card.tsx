@@ -3,6 +3,7 @@ import Meta from "antd/es/card/Meta";
 import { HeartOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import React, { memo } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 interface CardProps {
     id: string;
@@ -14,6 +15,7 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
     const navigate = useNavigate();
 
     const handleAddToFavorites = () => {
+        console.log("clicked");
         const storedFavorites = localStorage.getItem("favorites");
         const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
 
@@ -24,9 +26,10 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
             const newFavorite = { id, name, src };
             favorites.unshift(newFavorite);
             localStorage.setItem("favorites", JSON.stringify(favorites));
-            console.log("Added to favorites:", id);
+            toast.success("Product successfully added to favorites!");
+            console.log("true")
         } else {
-            console.error("Already in favorites:", id);
+            toast.error("Product already exists in favorites!");
         }
     };
 

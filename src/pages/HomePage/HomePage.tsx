@@ -1,6 +1,6 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Hero from "../../components/hero/Hero";
-import { Layout } from "antd";
+import { Layout, Typography } from "antd";
 import MealList from "../../components/products/MealList";
 import CocktailList from "../../components/products/CocktailList";
 import Search from "../../components/search/Search";
@@ -21,7 +21,12 @@ const HomePage: React.FC = () => {
             {/* products */}
             <div className="mt-10">
                 {/* global search */}
-                <Search onSearchData={handleSearchData} />
+                <div>
+                    <Typography.Title level={3} style={{ textAlign: "center" }}>
+                        Search Product
+                    </Typography.Title>
+                    <Search onSearchData={handleSearchData} />
+                </div>
 
                 {SearchData.length > 0 ? (
                     <Pagination data={SearchData} />
