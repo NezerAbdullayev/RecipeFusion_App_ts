@@ -3,12 +3,13 @@ import { MealsResponse, MealCategoryResponse, MealAreaResponse, MealIngredientsR
 import { MealProductsResponse } from "../../types/globalTypes";
 
 // API konfiqurasiya
+const cache: { [key: string]: { meals: any[] } } = {};
 const mealApi = createApi({
     reducerPath: "mealApi",
     baseQuery: fetchBaseQuery({ baseUrl: "https://www.themealdb.com/api/json/v1/1/" }),
     tagTypes: ["Meal"],
     endpoints: (builder) => ({
-        //  get meals filters list
+        // Get meals filters list
         getMealCategoryList: builder.query<MealCategoryResponse, void>({
             query: () => "list.php?c=list",
         }),
@@ -21,72 +22,102 @@ const mealApi = createApi({
             query: () => "list.php?i=list",
         }),
 
-        // get meal products
+        // Get meal products by category
         getMealProductByCategory: builder.query<MealProductsResponse, { categories: string[] }>({
             async queryFn({ categories }) {
-                try {
-                    const responses = await Promise.all(
-                        categories.map((category) =>
-                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`).then((res) => res.json()),
-                        ),
-                    );
+                const uniqueCategories = Array.from(new Set(categories));
+                const meals = [];
 
-                    const meals = responses.flatMap((response) => response.meals || []).reverse();
+                // check cache
+                for (const category of uniqueCategories) {
+                    if (cache[category]) {
+                        meals.push(...cache[category].meals);
+                    } else {
+                        try {
+                            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+                            const data = await response.json();
+                            const categoryMeals = data.meals || [];
+                            meals.push(...categoryMeals);
 
-                    return { data: { meals } as MealProductsResponse };
-                } catch (error) {
-                    return {
-                        error: {
-                            status: 500,
-                            statusText: "Failed to fetch",
-                            data: undefined,
-                        } as FetchBaseQueryError,
-                    };
+                            cache[category] = { meals: categoryMeals };
+                        } catch (error) {
+                            return {
+                                error: {
+                                    status: 500,
+                                    statusText: "Failed to fetch",
+                                    data: undefined,
+                                } as FetchBaseQueryError,
+                            };
+                        }
+                    }
                 }
+
+                return { data: { meals: meals.reverse() } as MealProductsResponse };
             },
         }),
 
         getMealProductByArea: builder.query<MealProductsResponse, { searchItem: string[] }>({
             async queryFn({ searchItem }) {
-                try {
-                    const responses = await Promise.all(
-                        searchItem.map((area) =>
-                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`).then((res) => res.json()),
-                        ),
-                    );
-                    const meals = responses.flatMap((response) => response.meals)?.reverse();
-                    return { data: { meals } as MealProductsResponse };
-                } catch (error) {
-                    return {
-                        error: {
-                            status: 500,
-                            statusText: "Failed to fetch",
-                            data: undefined,
-                        } as FetchBaseQueryError,
-                    };
+                const uniqueAreas = Array.from(new Set(searchItem));
+                const meals = [];
+
+                for (const area of uniqueAreas) {
+                    if (cache[area]) {
+                        meals.push(...cache[area].meals);
+                    } else {
+                        try {
+                            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
+                            const data = await response.json();
+                            const areaMeals = data.meals || [];
+                            meals.push(...areaMeals);
+
+                            // add to cache
+                            cache[area] = { meals: areaMeals };
+                        } catch (error) {
+                            return {
+                                error: {
+                                    status: 500,
+                                    statusText: "Failed to fetch",
+                                    data: undefined,
+                                } as FetchBaseQueryError,
+                            };
+                        }
+                    }
                 }
+
+                return { data: { meals: meals.reverse() } as MealProductsResponse };
             },
         }),
 
         getMealProductByIngredient: builder.query<MealProductsResponse, { searchItem: string[] }>({
             async queryFn({ searchItem }) {
-                try {
-                    const responses = await Promise.all(
-                        searchItem.map((ingredient) =>
-                            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`).then((res) => res.json()),
-                        ),
-                    );
-                    const meals = responses.flatMap((response) => response.meals)?.reverse();
-                    return { data: { meals } as  MealProductsResponse };
-                } catch (error) {
-                    return {
-                        error: {
-                            status: 500,
-                            statusText: "Failed to fetch",
-                            data: undefined,
-                        } as FetchBaseQueryError,
-                    };
+                const uniqueIngredients = Array.from(new Set(searchItem));
+                const meals = [];
+
+                for (const ingredient of uniqueIngredients) {
+                    if (cache[ingredient]) {
+                        meals.push(...cache[ingredient].meals);
+                    } else {
+                        try {
+                            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
+                            const data = await response.json();
+                            const ingredientMeals = data.meals || [];
+                            meals.push(...ingredientMeals);
+
+                            cache[ingredient] = { meals: ingredientMeals };
+                        } catch (error) {
+                            return {
+                                error: {
+                                    status: 500,
+                                    statusText: "Failed to fetch",
+                                    data: undefined,
+                                } as FetchBaseQueryError,
+                            };
+                        }
+                    }
                 }
+
+                return { data: { meals: meals.reverse() } as MealProductsResponse };
             },
         }),
 
@@ -104,6 +135,7 @@ const mealApi = createApi({
     }),
 });
 
+// Exported hooks
 export const {
     useGetMealCategoryListQuery,
     useGetMealAreaListQuery,

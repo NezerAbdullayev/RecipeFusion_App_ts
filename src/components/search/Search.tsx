@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import {  Input, Row } from "antd";
+import { Input, Row } from "antd";
 import { debounce } from "lodash";
 import { useLazyGetMealProductByNameQuery } from "../../redux/services/mealApi";
 import { CocktailProduct, MealProduct } from "../../types/globalTypes";
@@ -22,7 +22,7 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
 
         const combinedResults: (MealProduct | CocktailProduct)[] = [...meals, ...drinks];
 
-        if (combinedResults.length) {
+        if (combinedResults.length && searchTerm.trim().length > 0) {
             onSearchData(combinedResults);
         } else {
             onSearchData([]);
@@ -34,7 +34,9 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
             if (term?.length > 0) {
                 getMealProductByName({ searchItem: term });
                 getCocktailProductByName({ searchItem: term });
-            } else onSearchData([]);
+            } else {
+                onSearchData([]);
+            }
         }, 600),
         [],
     );
@@ -48,6 +50,7 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
         [debouncedSearchMeals],
     );
 
+    const isLoading = mealLoading || coctailsLoading;
     const isProductAvailable = (cocktailData?.drinks && cocktailData.drinks.length > 0) || (mealData?.meals && mealData.meals.length > 0);
 
     return (
@@ -60,7 +63,7 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
                 style={{ width: "90%", height: 50, margin: "30px auto" }}
             />
 
-            {searchTerm?.length > 0 && !isProductAvailable && !mealLoading && !coctailsLoading && (
+            {searchTerm?.length > 0 && !isProductAvailable && !isLoading && (
                 <div className="rounded bg-red-100 p-2 text-red-500">The product you are looking for is not available</div>
             )}
         </Row>

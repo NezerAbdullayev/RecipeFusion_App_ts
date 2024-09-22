@@ -55,9 +55,7 @@ function Header() {
                             <Button color="inherit" sx={{ ml: 2 }} onClick={handleFavorites}>
                                 <FavoriteIcon />
                             </Button>
-                            <Button onClick={handleRandomClick}>
-                                RANDOM
-                            </Button>
+                            <Button onClick={handleRandomClick}>RANDOM</Button>
                         </Box>
                     </Toolbar>
                 </Row>
