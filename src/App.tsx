@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./layout/AppLayout";
-import HomePage from "./pages/homePage/HomePage";
+import HomePage from "./pages/home/HomePage";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import DetailsPage from "./pages/detailsPage/DetailsPage";
 import Favorites from "./pages/favoritesPage/Favorites";
