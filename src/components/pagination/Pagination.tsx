@@ -14,28 +14,33 @@ const Pagination: React.FC<PaginationProps> = ({ data }) => {
 
     return (
         <>
-            <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
-                {paginate(data || []).map((product) => (
-                    <Col key={product.idDrink || product.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
-                        <Card
-                            id={product.idMeal || product.idDrink}
-                            name={product.strDrink || product.strMeal}
-                            src={product.strDrinkThumb || product.strMealThumb}
-                        />
-                    </Col>
-                ))}
-            </Row>
+            {data?.length > 0 ? (
+                <>
+                    <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
+                        {paginate(data).map((product) => (
+                            <Col key={product.idDrink || product.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
+                                <Card
+                                    id={product.idMeal || product.idDrink}
+                                    name={product.strDrink || product.strMeal}
+                                    src={product.strDrinkThumb || product.strMealThumb}
+                                />
+                            </Col>
+                        ))}
+                    </Row>
 
-            <AntPagination
-                current={currentPage}
-                pageSize={size}
-                align="center"
-                total={data?.length || 0}
-                onChange={(page) => setCurrentPage(page)}
-                style={{ textAlign: "center", margin: "20px 0" }}
-                showSizeChanger={false}
-            />
-
+                    <AntPagination
+                        current={currentPage}
+                        pageSize={size}
+                        align="center"
+                        total={data?.length || 0}
+                        onChange={(page) => setCurrentPage(page)}
+                        style={{ textAlign: "center", margin: "20px 0" }}
+                        showSizeChanger={false}
+                    />
+                </>
+            ) : (
+                <div className="rounded bg-red-100 p-2 text-center text-red-500">No product found</div>
+            )}
             <Divider />
         </>
     );
