@@ -70,11 +70,11 @@ const mealApi = createApi({
             },
         }),
 
-        getDetailsById: builder.query<MealsResponse, { id: string }>({
+        getDetailsById: builder.query<MealsResponse, { id?: string }>({
             query: ({ id }) => `lookup.php?i=${id}`,
         }),
 
-        getMealRandomMeal: builder.query<MealCategoryResponse, void>({
+        getMealRandomMeal: builder.query<MealsResponse, void>({
             query: () => "random.php",
         }),
 

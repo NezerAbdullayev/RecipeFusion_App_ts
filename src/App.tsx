@@ -4,6 +4,7 @@ import HomePage from "./pages/homePage/HomePage";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import DetailsPage from "./pages/detailsPage/DetailsPage";
 import Favorites from "./pages/favoritesPage/Favorites";
+import RandomProductPage from "./pages/randomProductPage/RandomProductPage";
 
 function App() {
     const router = createBrowserRouter([
@@ -14,8 +15,9 @@ function App() {
             children: [
                 { path: "/", element: <Navigate to="/home" replace /> },
                 { path: "home", element: <HomePage /> },
-                {path:"favorites",element:<Favorites />},
+                { path: "favorites", element: <Favorites /> },
                 { path: "details/:id", element: <DetailsPage /> },
+                { path: "random", element: <RandomProductPage /> },
                 { path: "*", element: <ErrorPage /> },
             ],
         },

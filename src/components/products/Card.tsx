@@ -10,7 +10,6 @@ interface CardProps {
     src: string;
 }
 
-
 const Card: React.FC<CardProps> = ({ id, name, src }) => {
     const navigate = useNavigate();
 

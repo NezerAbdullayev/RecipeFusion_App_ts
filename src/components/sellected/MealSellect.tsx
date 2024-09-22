@@ -1,4 +1,4 @@
-import { Alert, Col, Flex,  Row, Select, Spin } from "antd";
+import { Alert, Col, Flex, Row, Select, Spin } from "antd";
 import { useGetMealAreaListQuery, useGetMealCategoryListQuery, useGetMealIngredientsListQuery } from "../../redux/services/mealApi";
 import { Typography } from "antd";
 import { memo, useCallback } from "react";

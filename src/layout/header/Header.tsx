@@ -23,6 +23,10 @@ function Header() {
         navigate("/favorites");
     };
 
+    const handleRandomClick = () => {
+        navigate("/random");
+    };
+
     return (
         <Box sx={{ flexGrow: 1, position: "fixed", width: "100%", top: "0", zIndex: "99999" }}>
             <AppBar position="static" sx={{ background: "#3e3a3a" }}>
@@ -50,6 +54,9 @@ function Header() {
                             </Search>
                             <Button color="inherit" sx={{ ml: 2 }} onClick={handleFavorites}>
                                 <FavoriteIcon />
+                            </Button>
+                            <Button onClick={handleRandomClick}>
+                                RANDOM
                             </Button>
                         </Box>
                     </Toolbar>

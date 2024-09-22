@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import Hero from "../../components/hero/Hero";
 import { Layout } from "antd";
 import MealList from "../../components/products/MealList";

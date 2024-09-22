@@ -46,8 +46,8 @@ const coctailApi = createApi({
             },
         }),
 
-        getCocktailProductByIngredient:builder.query<CocktailProduct[],{ingredients:string[]}>({
-            async queryFn({ingredients}){
+        getCocktailProductByIngredient: builder.query<CocktailProduct[], { ingredients: string[] }>({
+            async queryFn({ ingredients }) {
                 try {
                     const responses = await Promise.all(
                         ingredients?.map((ingredient) =>
@@ -61,11 +61,11 @@ const coctailApi = createApi({
                     const message = error instanceof Error ? error.message : "Unknown error";
                     return { error: { status: "FETCH_ERROR", error: message } };
                 }
-            }
+            },
         }),
 
-        getCocktailProductByAlcoholic:builder.query<CocktailProduct[],{sellectedItems:string[]}>({
-            async queryFn({sellectedItems}){
+        getCocktailProductByAlcoholic: builder.query<CocktailProduct[], { sellectedItems: string[] }>({
+            async queryFn({ sellectedItems }) {
                 try {
                     const responses = await Promise.all(
                         sellectedItems?.map((Item) =>
@@ -79,14 +79,19 @@ const coctailApi = createApi({
                     const message = error instanceof Error ? error.message : "Unknown error";
                     return { error: { status: "FETCH_ERROR", error: message } };
                 }
-            }
+            },
         }),
-
-
 
         getCocktailProductByName: builder.query<CocktailProductsProps, { searchItem: string }>({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
+
+        getCocktailRandomProduct: builder.query<CocktailProductsProps, void>({
+            query: () => "random.php",
+        }),
+        getCocktailProductDetailsById:builder.query<CocktailProductsProps,{id?:string}>({
+            query:({id})=>`lookup.php?i=${id}`
+        })
     }),
 });
 
@@ -100,6 +105,8 @@ export const {
     useLazyGetCocktailProductByAlcoholicQuery,
 
     useLazyGetCocktailProductByNameQuery,
+    useLazyGetCocktailRandomProductQuery,
+    useGetCocktailProductDetailsByIdQuery
 } = coctailApi;
 
 export default coctailApi;
