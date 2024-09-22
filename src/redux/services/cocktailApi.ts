@@ -89,9 +89,9 @@ const coctailApi = createApi({
         getCocktailRandomProduct: builder.query<CocktailProductsProps, void>({
             query: () => "random.php",
         }),
-        getCocktailProductDetailsById:builder.query<CocktailProductsProps,{id?:string}>({
-            query:({id})=>`lookup.php?i=${id}`
-        })
+        getCocktailProductDetailsById: builder.query<CocktailProductsProps, { id?: string }>({
+            query: ({ id }) => `lookup.php?i=${id}`,
+        }),
     }),
 });
 
@@ -106,7 +106,7 @@ export const {
 
     useLazyGetCocktailProductByNameQuery,
     useLazyGetCocktailRandomProductQuery,
-    useGetCocktailProductDetailsByIdQuery
+    useGetCocktailProductDetailsByIdQuery,
 } = coctailApi;
 
 export default coctailApi;

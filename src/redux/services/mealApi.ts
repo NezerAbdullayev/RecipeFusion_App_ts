@@ -23,23 +23,31 @@ const mealApi = createApi({
 
         // get meal products
         getMealProductByCategory: builder.query<MealProductsResponse, { categories: string[] }>({
-            queryFn: async ({ categories }) => {
+            async queryFn({ categories }) {
                 try {
                     const responses = await Promise.all(
-                        categories?.map((category) =>
+                        categories.map((category) =>
                             fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`).then((res) => res.json()),
                         ),
                     );
-                    const meals = responses.flatMap((response) => response.meals)?.reverse();
+
+                    const meals = responses.flatMap((response) => response.meals || []).reverse();
+
                     return { data: { meals } as MealProductsResponse };
                 } catch (error) {
-                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                    return {
+                        error: {
+                            status: 500,
+                            statusText: "Failed to fetch",
+                            data: undefined,
+                        } as FetchBaseQueryError,
+                    };
                 }
             },
         }),
 
         getMealProductByArea: builder.query<MealProductsResponse, { searchItem: string[] }>({
-            queryFn: async ({ searchItem }) => {
+            async queryFn({ searchItem }) {
                 try {
                     const responses = await Promise.all(
                         searchItem.map((area) =>
@@ -47,15 +55,21 @@ const mealApi = createApi({
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals)?.reverse();
-                    return { data: { meals }, error: "" };
+                    return { data: { meals } as MealProductsResponse };
                 } catch (error) {
-                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                    return {
+                        error: {
+                            status: 500,
+                            statusText: "Failed to fetch",
+                            data: undefined,
+                        } as FetchBaseQueryError,
+                    };
                 }
             },
         }),
 
         getMealProductByIngredient: builder.query<MealProductsResponse, { searchItem: string[] }>({
-            queryFn: async ({ searchItem }) => {
+            async queryFn({ searchItem }) {
                 try {
                     const responses = await Promise.all(
                         searchItem.map((ingredient) =>
@@ -63,9 +77,15 @@ const mealApi = createApi({
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals)?.reverse();
-                    return { data: { meals }, error: "" };
+                    return { data: { meals } as  MealProductsResponse };
                 } catch (error) {
-                    return { error: "Failed to fetch" } as FetchBaseQueryError;
+                    return {
+                        error: {
+                            status: 500,
+                            statusText: "Failed to fetch",
+                            data: undefined,
+                        } as FetchBaseQueryError,
+                    };
                 }
             },
         }),
