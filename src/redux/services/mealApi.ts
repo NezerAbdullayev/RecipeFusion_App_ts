@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { MealsResponse, MealCategoryResponse, MealAreaResponse, MealIngredientsResponse } from "./types/apiTypes";
-import {  MealProductsProps } from "../../types/mealTypes";
+import { MealProductsResponse } from "../../types/globalTypes";
 
 // API konfiqurasiya
 const mealApi = createApi({
@@ -22,7 +22,7 @@ const mealApi = createApi({
         }),
 
         // get meal products
-        getMealProductByCategory: builder.query<MealsResponse, { categories: string[] }>({
+        getMealProductByCategory: builder.query<MealProductsResponse, { categories: string[] }>({
             queryFn: async ({ categories }) => {
                 try {
                     const responses = await Promise.all(
@@ -31,14 +31,14 @@ const mealApi = createApi({
                         ),
                     );
                     const meals = responses.flatMap((response) => response.meals)?.reverse();
-                    return { data: meals };
+                    return { data: { meals } as MealProductsResponse };
                 } catch (error) {
                     return { error: "Failed to fetch" } as FetchBaseQueryError;
                 }
             },
         }),
 
-        getMealProductByArea: builder.query<MealsResponse, { searchItem: string[] }>({
+        getMealProductByArea: builder.query<MealProductsResponse, { searchItem: string[] }>({
             queryFn: async ({ searchItem }) => {
                 try {
                     const responses = await Promise.all(
@@ -54,7 +54,7 @@ const mealApi = createApi({
             },
         }),
 
-        getMealProductByIngredient: builder.query<MealsResponse, { searchItem: string[] }>({
+        getMealProductByIngredient: builder.query<MealProductsResponse, { searchItem: string[] }>({
             queryFn: async ({ searchItem }) => {
                 try {
                     const responses = await Promise.all(
@@ -78,7 +78,7 @@ const mealApi = createApi({
             query: () => "random.php",
         }),
 
-        getMealProductByName: builder.query<MealProductsProps, { searchItem: string }>({
+        getMealProductByName: builder.query<MealProductsResponse, { searchItem: string }>({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
         }),
     }),

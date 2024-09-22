@@ -5,34 +5,34 @@ import {
     useLazyGetMealProductByAreaQuery,
     useLazyGetMealProductByIngredientQuery,
 } from "../../redux/services/mealApi";
-import Filter from "../sellected/MealSellect";
+import MealSellect from "../sellected/MealSellect";
 import Pagination from "../pagination/Pagination";
 
-export interface Meals {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-}
+import { MealProduct } from "../../types/globalTypes";
 
 const MealList: React.FC = () => {
+    // filter states
     const [mealCategorys, setMealCategorys] = useState<string[]>(["Beef"]);
     const [mealAreasFilter, setMealAreasFilter] = useState<string[]>([]);
     const [mealIngredientFilter, setMealIngredientFilter] = useState<string[]>([]);
 
-    const [mealData, setMealData] = useState<Meals[]>([]);
+    // product data
+    const [mealData, setMealData] = useState<MealProduct[] | []>([]);
 
-    console.log("azerbaycan");
+    // rtk query hooks
+    const { data: categoryData, error:categoryError, isLoading:categoryLoading } = useGetMealProductByCategoryQuery({ categories: mealCategorys });
 
-    const { data: categoryData, error, isLoading } = useGetMealProductByCategoryQuery({ categories: mealCategorys });
+    const [getMealProductByArea, { data: fetchedAreaMealData, error: areaError, isLoading: areaLoading }] =
+        useLazyGetMealProductByAreaQuery();
 
-    const [getMealProductByArea, { data: fetchedAreaMealData, error: areaError }] = useLazyGetMealProductByAreaQuery();
-
-    const [getMealProductByIngredient, { data: fetchedIngredientMealData, error: IngredientError }] =
+    const [getMealProductByIngredient, { data: fetchedIngredientMealData, error: ingredientError, isLoading: ingredientLoading }] =
         useLazyGetMealProductByIngredientQuery();
+
+    //TODO all useEffects
 
     // get category effect
     useEffect(() => {
-        setMealData(categoryData);
+        if (categoryData?.meals) setMealData(categoryData.meals);
     }, [categoryData]);
 
     // get area effect
@@ -48,12 +48,12 @@ const MealList: React.FC = () => {
     // local filtered data
     useEffect(() => {
         if (!categoryData || (!fetchedAreaMealData && !fetchedIngredientMealData)) {
-            setMealData(categoryData || []);
+            setMealData(categoryData?.meals || []);
             return;
         }
 
         // Create a set of meal IDs from the category data for quick lookup
-        const categoryMealIds = new Set(categoryData.map((product: any) => product.idMeal));
+        const categoryMealIds = new Set(categoryData?.meals?.map((product: any) => product.idMeal));
 
         if (fetchedAreaMealData && mealAreasFilter?.length > 0 && fetchedIngredientMealData && mealIngredientFilter?.length > 0) {
             const ingredientMealIds = new Set(fetchedIngredientMealData?.meals?.map((item) => item.idMeal));
@@ -62,20 +62,21 @@ const MealList: React.FC = () => {
 
             const filteredMeals = fetchedAreaMealData?.meals?.filter((item) => commonMealIds.includes(item.idMeal));
 
-            setMealData(filteredMeals);
+            setMealData(filteredMeals || []);
         } else if (fetchedAreaMealData && mealAreasFilter?.length > 0) {
             const updatedMeals = fetchedAreaMealData?.meals?.filter((item) => categoryMealIds.has(item.idMeal));
 
-            setMealData(updatedMeals);
+            setMealData(updatedMeals as MealProduct[]);
         } else if (fetchedIngredientMealData && mealIngredientFilter?.length > 0) {
             const updatedMeals = fetchedIngredientMealData?.meals?.filter((item) => categoryMealIds.has(item.idMeal));
 
-            setMealData(updatedMeals);
+            setMealData(updatedMeals as MealProduct[]);
         } else {
-            setMealData(categoryData);
+            setMealData(categoryData?.meals as MealProduct[]);
         }
     }, [fetchedAreaMealData, fetchedIngredientMealData, categoryData, mealAreasFilter, mealIngredientFilter]);
 
+    // ? handle functions
     // category
     const addMealCategoryList = (newData: string[]) => {
         // debugger;
@@ -93,14 +94,14 @@ const MealList: React.FC = () => {
         setMealIngredientFilter(ingredient);
     };
 
-    if (isLoading) return <Spin />;
+    if (categoryLoading || areaLoading || ingredientLoading) return <Spin />;
 
-    if (error || areaError || IngredientError)
+    if (categoryError || areaError || ingredientError)
         return <Alert message="Error" description="An error occurred while fetching the meals." type="error" />;
 
     return (
         <>
-            <Filter
+            <MealSellect
                 addMealCategoryList={addMealCategoryList}
                 mealCategorys={mealCategorys}
                 onMealFilterList={handleMealAreasList}

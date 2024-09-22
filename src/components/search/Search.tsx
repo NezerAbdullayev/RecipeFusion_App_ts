@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Alert, Input, Row } from "antd";
 import { debounce, divide } from "lodash";
 import { useLazyGetMealProductByNameQuery } from "../../redux/services/mealApi";
-import { CocktailProduct, MealProduct } from "../../types/mealTypes";
+import { CocktailProduct, MealProduct } from "../../types/globalTypes";
 import { useLazyGetCocktailProductByNameQuery } from "../../redux/services/cocktailApi";
 
 interface SearchProps {
@@ -16,10 +16,6 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
     const [getMealProductByName, { data: mealData, isLoading: mealLoading }] = useLazyGetMealProductByNameQuery();
 
     const [getCocktailProductByName, { data: cocktailData, isLoading: coctailsLoading }] = useLazyGetCocktailProductByNameQuery();
-
-    console.log(cocktailData?.drinks && cocktailData?.drinks?.length > 0);
-
-    const isProductAvailable = (cocktailData?.drinks && cocktailData.drinks.length > 0) || (mealData?.meals && mealData.meals.length > 0);
 
     useEffect(() => {
         const meals: MealProduct[] = mealData?.meals ?? [];
@@ -54,6 +50,8 @@ const Search: React.FC<SearchProps> = ({ onSearchData }) => {
         },
         [debouncedSearchMeals],
     );
+
+    const isProductAvailable = (cocktailData?.drinks && cocktailData.drinks.length > 0) || (mealData?.meals && mealData.meals.length > 0);
 
     return (
         <Row justify="center" style={{ flexDirection: "column", alignItems: "center" }}>

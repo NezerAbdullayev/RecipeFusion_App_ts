@@ -5,7 +5,7 @@ interface MainProps {
 }
 
 function Main({ children }: MainProps) {
-    return <main className="mt-[56px] sm:mt-[64px]">{children}</main>;
+    return <main className="mt-[56px] sm:mt-[64px] flex-1">{children}</main>;
 }
 
 export default Main;

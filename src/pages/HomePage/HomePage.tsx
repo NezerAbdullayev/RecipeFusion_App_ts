@@ -4,7 +4,7 @@ import { Layout } from "antd";
 import MealList from "../../components/products/MealList";
 import CocktailList from "../../components/products/CocktailList";
 import Search from "../../components/search/Search";
-import { CocktailProduct, MealProduct } from "../../types/mealTypes";
+import { CocktailProduct, MealProduct } from "../../types/globalTypes";
 import Pagination from "../../components/pagination/Pagination";
 
 const HomePage: React.FC = () => {

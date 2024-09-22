@@ -1,37 +1,69 @@
-import React from "react";
-import { Alert, Col, Divider, Pagination, Row, Spin } from "antd";
-import Card from "./Card";
-import { useGetCoctailProductsQuery } from "../../redux/services/cocktailApi";
-import usePagination from "../../hooks/usePagination";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, Spin } from "antd";
+
+import Pagination from "../pagination/Pagination";
+import CocktailSellect from "../sellected/CocktailSellect";
+import { useGetCocktailProductByCategoryQuery, useLazyGetCocktailProductByIngredientQuery } from "../../redux/services/cocktailApi";
+import { CocktailProductsProps } from "../../types/globalTypes";
 
 const CocktailList: React.FC = () => {
-    const { data, error, isLoading } = useGetCoctailProductsQuery();
+    const [cocktalCategoryList, setCocktailCategoryList] = useState<string[]>(["Cocktail"]);
+    const [cocktailIngredientList, setCocktailIngredientList] = useState<string[]>([]);
+    const [coctailAlcoholicList, setCoctailAlcoholic] = useState<string[]>([]);
 
-    const { currentPage, pageSize: size, paginate, setCurrentPage } = usePagination(data?.drinks?.length || 0, 10);
+    const [coctailData, setCoctailData] = useState<CocktailProductsProps | []>([]);
 
-    if (isLoading) return <Spin />;
-    if (error) return <Alert message="Error" description="An error occurred while fetching the coctails." type="error" />;
+    // API
+    const {
+        data: categoryData,
+        error: categoryError,
+        isLoading: categoryLoading,
+    } = useGetCocktailProductByCategoryQuery({ categories: cocktalCategoryList });
+
+
+    const [GetCocktailProductByIngredient,{data:fetchedIngredietData,error:ingredientError}]=useLazyGetCocktailProductByIngredientQuery()
+
+    useEffect(() => {
+        setCoctailData(categoryData || []);
+    }, [categoryData]);
+
+
+
+    // ? handle functions
+
+    // category
+    const handleCocktailCategoryList = useCallback((newCategory: string[]) => {
+        setCocktailCategoryList(newCategory.includes("Cocktail") ? newCategory : ["Cocktail", ...newCategory]);
+    }, []);
+
+    // Alcoholic
+    const handleCocktailAlcoholicList = useCallback((drink: string[]) => {
+        setCoctailAlcoholic(drink);
+    }, []);
+
+    //Ingredient
+
+    const handleCocktailIngredientList = useCallback((ingredient: string[]) => {
+        setCocktailIngredientList(ingredient);
+    }, []);
+
+
+    if (categoryLoading) return <Spin />;
+
+    if (categoryError) return <Alert message="Error" description="An error occurred while fetching the coctails." type="error" />;
 
     return (
         <>
-            <Row gutter={[16, 16]} style={{ maxWidth: "90%", width: "1440px", margin: "0 auto" }}>
-                {paginate(data?.drinks || []).map((drink) => (
-                    <Col key={drink.idDrink} xs={24} sm={12} md={8} lg={6} xl={6}>
-                        <Card id={drink.idDrink} name={drink.strDrink} src={drink.strDrinkThumb} />
-                    </Col>
-                ))}
-            </Row>
-            <Pagination
-                current={currentPage}
-                pageSize={size}
-                align="center"
-                total={data?.drinks?.length || 0}
-                onChange={(page) => setCurrentPage(page)}
-                style={{ textAlign: "center", margin: "20px 0" }}
-                showSizeChanger={false}
+            <CocktailSellect
+                onCocktailCategoryList={handleCocktailCategoryList}
+                onCocktailAlcoholicList={handleCocktailAlcoholicList}
+                onCocktailIngredientList={handleCocktailIngredientList}
+                cocktalCategoryList={cocktalCategoryList}
+                cocktailIngredientList={cocktailIngredientList}
+                coctailAlcoholicList={coctailAlcoholicList}
             />
 
-            <Divider />
+            <Pagination data={coctailData} />
         </>
     );
 };

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import Card from "../products/Card";
 
 import { Col, Row, Pagination as AntPagination, Divider } from "antd";
 import usePagination from "../../hooks/usePagination";
-import { CocktailProduct, MealProduct } from "../../types/mealTypes";
+import { CocktailProduct, MealProduct } from "../../types/globalTypes";
 
 interface PaginationProps {
     data: (MealProduct | CocktailProduct)[];
@@ -18,7 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({ data }) => {
                 {paginate(data || []).map((product) => (
                     <Col key={product.idDrink || product.idMeal} xs={24} sm={12} md={8} lg={6} xl={6}>
                         <Card
-                            id={product.idMeal}
+                            id={product.idMeal || product.idDrink}
                             name={product.strDrink || product.strMeal}
                             src={product.strDrinkThumb || product.strMealThumb}
                         />
@@ -41,4 +41,4 @@ const Pagination: React.FC<PaginationProps> = ({ data }) => {
     );
 };
 
-export default Pagination;
+export default memo(Pagination);

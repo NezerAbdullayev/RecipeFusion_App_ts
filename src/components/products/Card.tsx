@@ -29,7 +29,6 @@ const Card: React.FC<CardProps> = ({ id, name, src }) => {
         } else {
             console.error("Already in favorites:", id);
         }
-        console.log(favorites);
     };
 
     const handleOpenDetails = () => {
