@@ -27,7 +27,7 @@ const coctailApi = createApi({
         }),
 
         // ? get cocktail products
-        getCocktailProductByCategory: builder.query<CocktailProductsProps, { categories: string[] }>({
+        getCocktailProductByCategory: builder.query<CocktailProduct[], { categories: string[] }>({
             async queryFn({ categories }) {
                 try {
                     const responses = await Promise.all(
@@ -37,7 +37,8 @@ const coctailApi = createApi({
                     );
 
                     const cocktail = responses.flatMap((response) => response.drinks)?.reverse();
-                    return { data: cocktail as CocktailProductsProps };
+
+                    return { data: cocktail as CocktailProduct[] };
                 } catch (error) {
                     const message = error instanceof Error ? error.message : "Unknown error";
                     return { error: { status: "FETCH_ERROR", error: message } };
@@ -45,17 +46,17 @@ const coctailApi = createApi({
             },
         }),
 
-        getCocktailProductByIngredient:builder.query<CocktailProductsProps,{ingredients:string[]}>({
+        getCocktailProductByIngredient:builder.query<CocktailProduct[],{ingredients:string[]}>({
             async queryFn({ingredients}){
                 try {
                     const responses = await Promise.all(
                         ingredients?.map((ingredient) =>
-                            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${ingredient}`).then((res) => res.json()),
+                            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient}`).then((res) => res.json()),
                         ),
                     );
 
                     const cocktail = responses.flatMap((response) => response.drinks)?.reverse();
-                    return { data: cocktail as CocktailProductsProps };
+                    return { data: cocktail as CocktailProduct[] };
                 } catch (error) {
                     const message = error instanceof Error ? error.message : "Unknown error";
                     return { error: { status: "FETCH_ERROR", error: message } };
@@ -63,9 +64,25 @@ const coctailApi = createApi({
             }
         }),
 
-        // getCocktailIngredients: builder.query<{ strCategory: string[] }, void>({
-        //     query: () => "list.php?i=list",
-        // }),
+        getCocktailProductByAlcoholic:builder.query<CocktailProduct[],{sellectedItems:string[]}>({
+            async queryFn({sellectedItems}){
+                try {
+                    const responses = await Promise.all(
+                        sellectedItems?.map((Item) =>
+                            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${Item}`).then((res) => res.json()),
+                        ),
+                    );
+
+                    const cocktail = responses.flatMap((response) => response.drinks)?.reverse();
+                    return { data: cocktail as CocktailProduct[] };
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : "Unknown error";
+                    return { error: { status: "FETCH_ERROR", error: message } };
+                }
+            }
+        }),
+
+
 
         getCocktailProductByName: builder.query<CocktailProductsProps, { searchItem: string }>({
             query: ({ searchItem }) => `search.php?s=${searchItem}`,
@@ -80,6 +97,7 @@ export const {
 
     useGetCocktailProductByCategoryQuery,
     useLazyGetCocktailProductByIngredientQuery,
+    useLazyGetCocktailProductByAlcoholicQuery,
 
     useLazyGetCocktailProductByNameQuery,
 } = coctailApi;

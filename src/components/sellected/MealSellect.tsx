@@ -7,7 +7,7 @@ const { Option } = Select;
 const { Title } = Typography;
 
 interface FilterProps {
-    addMealCategoryList: (newData: string[]) => void;
+    onMealCategoryList: (newData: string[]) => void;
     mealCategorys: string[];
     onMealFilterList: (area: string[]) => void;
     mealAreasFilter: string[];
@@ -16,7 +16,7 @@ interface FilterProps {
 }
 
 const MealSellect: React.FC<FilterProps> = ({
-    addMealCategoryList,
+    onMealCategoryList,
     mealCategorys,
     onMealFilterList,
     mealAreasFilter,
@@ -31,9 +31,9 @@ const MealSellect: React.FC<FilterProps> = ({
     // Handlers for Select component changes
     const handleCategoryChange = useCallback(
         (value: string[]) => {
-            addMealCategoryList(value);
+            onMealCategoryList(value);
         },
-        [addMealCategoryList],
+        [onMealCategoryList],
     );
 
     const handleAreaChange = useCallback(

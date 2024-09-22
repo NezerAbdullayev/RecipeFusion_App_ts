@@ -17,7 +17,7 @@ const MealList: React.FC = () => {
     const [mealIngredientFilter, setMealIngredientFilter] = useState<string[]>([]);
 
     // product data
-    const [mealData, setMealData] = useState<MealProduct[] | []>([]);
+    const [mealData, setMealData] = useState<MealProduct[]>([]);
 
     // rtk query hooks
     const { data: categoryData, error:categoryError, isLoading:categoryLoading } = useGetMealProductByCategoryQuery({ categories: mealCategorys });
@@ -28,13 +28,8 @@ const MealList: React.FC = () => {
     const [getMealProductByIngredient, { data: fetchedIngredientMealData, error: ingredientError, isLoading: ingredientLoading }] =
         useLazyGetMealProductByIngredientQuery();
 
+
     //TODO all useEffects
-
-    // get category effect
-    useEffect(() => {
-        if (categoryData?.meals) setMealData(categoryData.meals);
-    }, [categoryData]);
-
     // get area effect
     useEffect(() => {
         if (mealAreasFilter.length > 0) getMealProductByArea({ searchItem: mealAreasFilter });
@@ -53,7 +48,7 @@ const MealList: React.FC = () => {
         }
 
         // Create a set of meal IDs from the category data for quick lookup
-        const categoryMealIds = new Set(categoryData?.meals?.map((product: any) => product.idMeal));
+        const categoryMealIds = new Set(categoryData?.meals?.map((product) => product.idMeal));
 
         if (fetchedAreaMealData && mealAreasFilter?.length > 0 && fetchedIngredientMealData && mealIngredientFilter?.length > 0) {
             const ingredientMealIds = new Set(fetchedIngredientMealData?.meals?.map((item) => item.idMeal));
@@ -78,7 +73,7 @@ const MealList: React.FC = () => {
 
     // ? handle functions
     // category
-    const addMealCategoryList = (newData: string[]) => {
+    const handleMealCategoryList = (newData: string[]) => {
         // debugger;
         setMealCategorys(newData?.includes("Beef") ? newData : ["Beef", ...newData]);
     };
@@ -102,7 +97,7 @@ const MealList: React.FC = () => {
     return (
         <>
             <MealSellect
-                addMealCategoryList={addMealCategoryList}
+                onMealCategoryList={handleMealCategoryList}
                 mealCategorys={mealCategorys}
                 onMealFilterList={handleMealAreasList}
                 mealAreasFilter={mealAreasFilter}
