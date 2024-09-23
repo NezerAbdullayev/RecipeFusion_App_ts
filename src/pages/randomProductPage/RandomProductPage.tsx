@@ -14,7 +14,7 @@ const RandomProductPage: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="w-[1000px] p-5 mx-auto max-w-[80%]">
             <Row justify="center" style={{ marginBottom: "20px" }}>
                 <Col>
                     <Button type="primary" onClick={handleRandomClick}>
