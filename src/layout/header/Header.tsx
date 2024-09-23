@@ -4,14 +4,9 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
-import SearchIconWrapper from "./SearchIconWrapper";
-import StyledInputBase from "./StyledInputBase";
 import Row from "../../components/Row";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import Search from "./Search";
-
 function Header() {
     const navigate = useNavigate();
 
@@ -46,12 +41,6 @@ function Header() {
                             RecipeFusion
                         </Typography>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <Search>
-                                <SearchIconWrapper>
-                                    <SearchIcon />
-                                </SearchIconWrapper>
-                                <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-                            </Search>
                             <Button color="inherit" sx={{ ml: 2 }} onClick={handleFavorites}>
                                 <FavoriteIcon />
                             </Button>
