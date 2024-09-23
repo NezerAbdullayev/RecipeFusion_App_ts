@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
+import {  createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./layout/AppLayout";
 import HomePage from "./pages/home/HomePage";
 import ErrorPage from "./pages/errorPage/ErrorPage";
@@ -13,8 +13,7 @@ function App() {
             element: <AppLayout />,
             errorElement: <ErrorPage />,
             children: [
-                { path: "/", element: <Navigate to="/home" replace /> },
-                { path: "home", element: <HomePage /> },
+                { path: "/", element:  <HomePage /> },
                 { path: "favorites", element: <Favorites /> },
                 { path: "details/:id", element: <DetailsPage /> },
                 { path: "random", element: <RandomProductPage /> },

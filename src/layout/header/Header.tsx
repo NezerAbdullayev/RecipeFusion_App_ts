@@ -11,7 +11,7 @@ function Header() {
     const navigate = useNavigate();
 
     const handleLogoClick = () => {
-        navigate("/home");
+        navigate("/");
     };
 
     const handleFavorites = () => {
